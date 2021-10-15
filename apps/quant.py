@@ -95,10 +95,12 @@ def app():
     
     with columns[0]:
         st.pyplot(ggplot.draw(p))
-        st.write(df.describe().T)
-        st.write(df.groupby([non_numeric_columns[0]]).describe())
 
     with columns[1]:
         st.write(df)
     
+    back = st.columns(1)
+    with back[0]:
+        st.write(df.describe().T)
+        st.write(df.groupby([non_numeric_columns[0]]).describe())
     
