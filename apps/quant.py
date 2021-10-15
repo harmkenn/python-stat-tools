@@ -102,5 +102,5 @@ def app():
     back = st.columns(1)
     with back[0]:
         st.write(df.describe().T)
-        st.write(df.groupby([non_numeric_columns[0]]).describe())
+        st.write(df.groupby([cv]).describe())
     
