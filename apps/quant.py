@@ -11,10 +11,12 @@ def app():
     # Add a sidebar
     st.sidebar.subheader("Graph Settings")
     
-    gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
-    googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-    worksheetName = st.text_input("Sheet Name:","Sheet1")
-    URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
+    columns = st.columns((2,1))
+    with columns[1]:
+        gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+        googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
+        worksheetName = st.text_input("Sheet Name:","Sheet1")
+        URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
     
     @st.cache (ttl = 600)
     def upload_gs(x):
@@ -30,7 +32,7 @@ def app():
         numeric_columns = list(df.select_dtypes(['float', 'int']).columns)
         non_numeric_columns = list(df.select_dtypes(['object']).columns)
         non_numeric_columns.append(None)
-        print(non_numeric_columns)
+        
     except Exception as e:
         print(e)
         st.write("Please upload file to the application.")
@@ -90,7 +92,13 @@ def app():
         else:
             p = p + geom_point(aes(x=x,y=y))
     
-    st.pyplot(ggplot.draw(p))
-    st.write(df)
     
-   
+    with columns[0]:
+        st.pyplot(ggplot.draw(p))
+        st.write(df.describe().T)
+        st.write(df.groupby([non_numeric_columns[0]]).describe())
+
+    with columns[1]:
+        st.write(df)
+    
+    
