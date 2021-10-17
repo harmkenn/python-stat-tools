@@ -7,7 +7,7 @@ import numpy as np
 
 def app():
     # title of the app
-    st.title("Quantitative Stats")
+    st.subheader("Quantitative Stats")
     # Add a sidebar
     st.sidebar.subheader("Graph Settings")
     
