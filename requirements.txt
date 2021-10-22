@@ -3,3 +3,4 @@ numpy
 pandas
 plotly_express
 plotnine
+scipy.stats
