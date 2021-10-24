@@ -39,7 +39,7 @@ class MultiApp:
         })
 
     def run(self):
-        st.sidebar.title("Python Stat Tools v1.6")
+        st.sidebar.title("Python Stat Tools v1.7")
         st.sidebar.subheader("by Ken Harmon")
         
         app = st.sidebar.radio(
