@@ -22,7 +22,7 @@ def app():
             worksheetName = st.text_input("Sheet Name:","Sheet3")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'    
             df = pd.read_csv(URL)
-            df = df.dropna(axis=1, how="any")
+            df = df.dropna(axis=1, how="all")
             x = df["X"]
             p_x = df["Prob(X)"]
             m =  sum(x*p_x)  

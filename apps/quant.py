@@ -24,7 +24,7 @@ def app():
         return out
 
     df = upload_gs(URL)
-    df = df.dropna(axis=1, how="any") 
+    df = df.dropna(axis=1, how="all") 
        
     global numeric_columns
     global non_numeric_columns
