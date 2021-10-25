@@ -18,7 +18,7 @@ def app():
         with c1:
             gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-            worksheetName = st.text_input("Sheet Name:","Sheet5")
+            worksheetName = st.text_input("Sheet Name:","Bivariate")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
             #@st.cache (ttl = 600)
             def upload_gs(x):
@@ -114,7 +114,7 @@ def app():
         with c1:
             gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-            worksheetName = st.text_input("Sheet Name:","Sheet5")
+            worksheetName = st.text_input("Sheet Name:","Paired")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
             #@st.cache (ttl = 600)
             def upload_gs(x):
@@ -214,7 +214,7 @@ def app():
         with c1:
             gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-            worksheetName = st.text_input("Sheet Name:","Sheet7")
+            worksheetName = st.text_input("Sheet Name:","Bivariate")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
             #@st.cache (ttl = 600)
             def upload_gs(x):
@@ -228,46 +228,39 @@ def app():
             #global non_numeric_columns
             numeric_columns = list(df.select_dtypes(['float', 'int']).columns)
             non_numeric_columns = list(df.select_dtypes(['object']).columns)
-            non_numeric_columns.append(None)
-            non_numeric_columns.reverse()
             st.sidebar.subheader("Two Sample Data")
-            q1 = st.sidebar.selectbox('Set 1 Data', options=numeric_columns)
-            q2 = st.sidebar.selectbox('Set 2 Data', options=numeric_columns)
-            cat = st.sidebar.selectbox('Categorical Data', options=non_numeric_columns)
+            quant = st.sidebar.selectbox('Common Variable', options=numeric_columns)
+            cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
+            allcat = list(df[cat].unique())
+            g1 = st.sidebar.selectbox('Group 1',options=allcat) 
+            g2 = st.sidebar.selectbox('Group 2',options=allcat) 
             st.dataframe(df.assign(hack='').set_index('hack')) 
-        if q1 == q2:
+        if g1 == g2:
             with c2:
-                st.warning('Make set 1 and set 2 different')
-        if q1 != q2:
+                st.warning('Select different Groups')
+        if g1 != g2:
             with c2:
+                sdf = df[[cat,quant]]
+                groups = [g1,g2]
+                fsdf = sdf[sdf[cat].isin(groups)]
+                st.markdown(f"Quantity: {quant}")
+                st.markdown(f"Category: {cat}")   
+                st.markdown(f"Group 1: {g1}")  
+                st.markdown(f"Group 1: {g2}")
+                st.dataframe(fsdf.groupby(cat).describe().T)
                 
-                if cat != None:
-                    allcat = list(df[cat].unique())
-                    cat1 = st.sidebar.selectbox('Category',options=allcat) 
-                    sdf = df[[q1,q2,cat]]
-                    fsdf = sdf[sdf[cat]==cat1]
-                    st.markdown(f"Set 1: {q1}")
-                    st.markdown(f"Set 2: {q2}")
-                    st.markdown(f"Category: {cat}")   
-                    st.markdown(f"Variable: {cat1}")  
-                    st.dataframe(fsdf.describe())
-                if cat == None:
-                    fsdf = df[[q1,q2]]
-                    st.markdown(f"Set 1: {q1}")
-                    st.markdown(f"Set 2: {q2}")
-                    st.markdown(f"Category: {cat}")  
-                    st.write(pd.DataFrame(fsdf.describe()))
-                fsdf=pd.DataFrame(fsdf)
             with c3:
-                p = pg.qqplot(fsdf[q1], dist='norm')
+                gp1 = fsdf[fsdf[cat]==g1][quant]
+                p = pg.qqplot(gp1, dist='norm')
                 st.pyplot(ggplot.draw(p))
-                shap1 = scipy.stats.shapiro(fsdf[q1].dropna(axis=0, how="all"))
+                shap1 = scipy.stats.shapiro(gp1)
                 st.write("Shapiro p-Value: " + str(shap1[1]))
                 
             with c4:
-                p = pg.qqplot(fsdf[q2], dist='norm')
+                gp2 = fsdf[fsdf[cat]==g2][quant]
+                p = pg.qqplot(gp2, dist='norm')
                 st.pyplot(ggplot.draw(p))
-                shap2 = scipy.stats.shapiro(fsdf[q2].dropna(axis=0, how="all"))
+                shap2 = scipy.stats.shapiro(gp2)
                 st.write("Shapiro p-Value: " + str(shap2[1]))
             
             
@@ -280,18 +273,19 @@ def app():
                 ev = st.checkbox("Equal Variances")
                 
             with d2:
-                st.write("set 1 - set 2")
+                st.write(cat+": "+g1+"-"+g2+ " "+ quant)
 
-                sfsdf = pd.DataFrame(fsdf.describe())
-                n1 = sfsdf[q1].iloc[0]
-                n2 = sfsdf[q2].iloc[0]
-                sd1 = sfsdf[q1].iloc[2]
-                sd2 = sfsdf[q2].iloc[2]
+                sfsdf = pd.DataFrame(fsdf.groupby(cat).describe().T)
+                
+                n1 = sfsdf[g1].iloc[0]
+                n2 = sfsdf[g2].iloc[0]
+                sd1 = sfsdf[g1].iloc[2]
+                sd2 = sfsdf[g2].iloc[2]
                 
                 se1 = sd1/math.sqrt(n1)
                 se2 = sd2/math.sqrt(n2)
                 sem = math.sqrt(se1**2+se2**2)
-                xbard = sfsdf[q1].iloc[1]-sfsdf[q2].iloc[1]
+                xbard = sfsdf[g1].iloc[1]-sfsdf[g2].iloc[1]
                 if ev:
                     df = n1+n2-2
                 else:
@@ -334,4 +328,127 @@ def app():
                 lower = xbard - abs(me)
                 upper = xbard + abs(me) 
                 st.write(str(100*cl) + "'%' confidence interval is (" + str(lower) +", "+str(upper)+")") 
+
+    if t_choice == "One Sample Stats":
+        c1,c2 = st.columns((3,1))
+        with c1:
+            n = int(st.text_input("Sample Size (n):",12))
+            
+            xbar = float(st.text_input("Sample Mean (x-Bar):", 3.7))
+            s = float(st.text_input("Sample Standard Deviation (s):", 1.2))
+            
+        st.markdown('''---''')
+        d1,d2,d3 = st.columns((1,2,3))
+        with d1:
+            nh = float(st.text_input("Null Hypothesis:",2))
+            alpha = float(st.text_input("Alpha:",0.05))
+            tail_choice = st.radio("",["Left Tail","Two Tails","Right Tail"])
+        with d2:
+            
+            df = n-1
+            sem = s/math.sqrt(n)
+            ts = (xbar - nh)/sem
+            x = np.arange(-5,5,.1)
+            ty = scipy.stats.t.pdf(x,df)
+            tdf = pd.DataFrame({"x":x,"ty":ty})
+            tplot = ggplot(tdf) + coord_fixed(ratio = 4)
+            if tail_choice == "Left Tail":
+                pvalue = scipy.stats.t.cdf(ts,df)
+                cv = scipy.stats.t.ppf(alpha,df)
+                tdf["Left"] = np.where(tdf["x"]<=ts,tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Left"), fill = "steelblue", size = .1, alpha = .4)
+                cl = 1 - 2*alpha
+            if tail_choice == "Two Tails":
+                rts = abs(ts)
+                lts = -rts
+                pvalue = 2*scipy.stats.t.cdf(lts,df)
+                cv = scipy.stats.t.ppf(alpha/2,df)
+                cv = abs(cv)
+                tdf["Center"] = np.where(np.logical_or(tdf["x"]>=rts,tdf["x"]<=lts),tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Center"), fill = "steelblue", size = .1, alpha = .4)
+                cl = 1-alpha
+            if tail_choice == "Right Tail":
+                pvalue = 1-scipy.stats.t.cdf(ts,df)
+                cv = scipy.stats.t.ppf(1-alpha,df)
+                tdf["Right"] = np.where(tdf["x"]>=ts,tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
+                cl=1-2*alpha
+            me = cv*sem
+            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"c-Value":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            st.write(data) 
+        with d3:
+            tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
+            tplot = tplot + geom_line(aes(x=x,y=ty))
+            st.pyplot(ggplot.draw(tplot))
+            lower = xbar - abs(me)
+            upper = xbar + abs(me) 
+            st.write(str(100*cl) + "'%' confidence interval is (" + str(lower) +", "+str(upper)+")")        
+            
+    if t_choice == "Two Sample Stats":
+        c1,c2 = st.columns((2,2))
+        with c1:
+            n1 = int(st.text_input("Sample 1 Size (n1):",12))
+            xbar1 = float(st.text_input("Sample 1 Mean (x-Bar1):", 3.7))
+            s1 = float(st.text_input("Sample 1 Standard Deviation (s1):", 1.2))           
+ 
+        with c2:
+            n2 = int(st.text_input("Sample 2 Size (n2):",13))
+            xbar2 = float(st.text_input("Sample 2 Mean (x-Bar2):", 3.5))
+            s2 = float(st.text_input("Sample 2 Standard Deviation (s2):", 1.0))   
+            
+        st.markdown('''---''')
+        d1,d2,d3 = st.columns((1,1,2))
+        with d1:
+            nh = float(st.text_input("Null Hypothesis:",0))
+            alpha = float(st.text_input("Alpha:",0.05))
+            tail_choice = st.radio("",["Left Tail","Two Tails","Right Tail"])
+            ev = st.checkbox("Equal Variances")
                 
+        with d2:
+            st.write("Sample 1 - Sample 2")
+            se1 = s1/math.sqrt(n1)
+            se2 = s2/math.sqrt(n2)
+            sem = math.sqrt(se1**2+se2**2)
+            xbard = xbar1 - xbar2
+            if ev:
+                df = n1+n2-2
+            else:
+                df = sem**4/(s1**4/(n1**2*(n1-1))+s2**4/(n2**2*(n2-1)))
+            ts = (xbard-nh)/sem
+            
+            #st.write(ts,df,sem)
+            x = np.arange(-5,5,.1)
+            ty = scipy.stats.t.pdf(x,df)
+            tdf = pd.DataFrame({"x":x,"ty":ty})
+            tplot = ggplot(tdf) + coord_fixed(ratio = 4)
+            if tail_choice == "Left Tail":
+                pvalue = scipy.stats.t.cdf(ts,df)
+                cv = scipy.stats.t.ppf(alpha,df)
+                tdf["Left"] = np.where(tdf["x"]<=ts,tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Left"), fill = "steelblue", size = .1, alpha = .4)
+                cl = 1 - 2*alpha
+            if tail_choice == "Two Tails":
+                rts = abs(ts)
+                lts = -rts
+                pvalue = 2*scipy.stats.t.cdf(lts,df)
+                cv = scipy.stats.t.ppf(alpha/2,df)
+                cv = abs(cv)
+                tdf["Center"] = np.where(np.logical_or(tdf["x"]>=rts,tdf["x"]<=lts),tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Center"), fill = "steelblue", size = .1, alpha = .4)
+                cl = 1-alpha
+            if tail_choice == "Right Tail":
+                pvalue = 1-scipy.stats.t.cdf(ts,df)
+                cv = scipy.stats.t.ppf(1-alpha,df)
+                tdf["Right"] = np.where(tdf["x"]>=ts,tdf["ty"],0)
+                tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
+                cl=1-2*alpha
+            me = cv*sem
+            data = pd.DataFrame({"df":df,"x-bar-d":xbard,"sem":sem,"c-Value":cv,"ME":abs(me),"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            st.write(data) 
+        with d3:
+            tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
+            tplot = tplot + geom_line(aes(x=x,y=ty))
+            st.pyplot(ggplot.draw(tplot))
+            lower = xbard - abs(me)
+            upper = xbard + abs(me) 
+            st.write(str(100*cl) + "'%' confidence interval is (" + str(lower) +", "+str(upper)+")")   

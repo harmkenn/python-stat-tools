@@ -15,10 +15,10 @@ def app():
     with columns[1]:
         gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
         googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-        worksheetName = st.text_input("Sheet Name:","Sheet1")
+        worksheetName = st.text_input("Sheet Name:","Bivariate")
         URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
     
-    @st.cache (ttl = 600)
+    #@st.cache (ttl = 600)
     def upload_gs(x):
         out = pd.read_csv(x)
         return out
