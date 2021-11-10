@@ -76,25 +76,26 @@ def app():
             st.write("Shapiro p-Value: " + str(ddd))    
     with d2:
         gx =  float(st.text_input("Given X:",0)) 
-        py = intercept + slope*gx
-        st.markdown("Predicted y: "+str(py))  
-        alpha = float(st.text_input("alpha",.05))
-        cl = 1-alpha
-        n = len(fsdf)
-        meanx = np.mean(fsdf[xvar])
-        sdx = np.std(fsdf[xvar])
-        dof = n-2
-        ctv = sp.stats.t.ppf(alpha/2,dof) 
-        slower = slope + ctv*ses
-        shigher = slope - ctv*ses
-        st.markdown(str(100*cl)+"'%' confidnce interval for slope: ("+str(slower)+","+str(shigher)+")")
-        seyhat = sr*np.sqrt(1+1/n+(gx-meanx)**2/((n-1)*sdx**2))
-        pime = ctv*seyhat
-        plower = py + pime
-        phigher = py - pime         
-        st.markdown(str(100*cl)+"'%' prediction interval for y when x = "+str(gx)+": ("+str(plower)+","+str(phigher)+")")
-        semuhat = sr*np.sqrt(1/n+(gx-meanx)**2/((n-1)*sdx**2))
-        cimy = ctv*semuhat
-        clower = py + cimy
-        chigher = py - cimy 
-        st.markdown(str(100*cl)+"'%' confidence interval for mean y when x = "+str(gx)+": ("+str(clower)+","+str(chigher)+")")
+        if xvar != yvar:
+            py = intercept + slope*gx
+            st.markdown("Predicted y: "+str(py))  
+            alpha = float(st.text_input("alpha",.05))
+            cl = 1-alpha
+            n = len(fsdf)
+            meanx = np.mean(fsdf[xvar])
+            sdx = np.std(fsdf[xvar])
+            dof = n-2
+            ctv = sp.stats.t.ppf(alpha/2,dof) 
+            slower = slope + ctv*ses
+            shigher = slope - ctv*ses
+            st.markdown(str(100*cl)+"'%' confidnce interval for slope: ("+str(slower)+","+str(shigher)+")")
+            seyhat = sr*np.sqrt(1+1/n+(gx-meanx)**2/((n-1)*sdx**2))
+            pime = ctv*seyhat
+            plower = py + pime
+            phigher = py - pime         
+            st.markdown(str(100*cl)+"'%' prediction interval for y when x = "+str(gx)+": ("+str(plower)+","+str(phigher)+")")
+            semuhat = sr*np.sqrt(1/n+(gx-meanx)**2/((n-1)*sdx**2))
+            cimy = ctv*semuhat
+            clower = py + cimy
+            chigher = py - cimy 
+            st.markdown(str(100*cl)+"'%' confidence interval for mean y when x = "+str(gx)+": ("+str(clower)+","+str(chigher)+")")
