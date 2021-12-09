@@ -7,23 +7,22 @@ import numpy as np
 
 def app():
     # title of the app
-    st.subheader("Quantitative Stats")
+    #st.subheader("Quantitative Stats")
     # Add a sidebar
     st.sidebar.subheader("Graph Settings")
     
-    columns = st.columns((2,1))
-    with columns[1]:
-        gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+    columns = st.columns((1,2))
+    with columns[0]:
+        gs_URL = st.session_state.gs_URL
         googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
         worksheetName = st.text_input("Sheet Name:","Bivariate")
         URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
     
-    #@st.cache (ttl = 600)
-    def upload_gs(x):
-        out = pd.read_csv(x)
-        return out
 
-    df = upload_gs(URL)
+        if st.button('Refresh'):
+            df = pd.read_csv(URL)
+            df = df.dropna(axis=1, how="all")      
+    df = pd.read_csv(URL)
     df = df.dropna(axis=1, how="all") 
        
     global numeric_columns
@@ -93,10 +92,10 @@ def app():
             p = p + geom_point(aes(x=x,y=y))
     
     
-    with columns[0]:
+    with columns[1]:
         st.pyplot(ggplot.draw(p))
 
-    with columns[1]:
+    with columns[0]:
         st.write(df)
     
     back = st.columns(1)

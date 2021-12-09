@@ -12,16 +12,14 @@ def app():
         c1,c2 = st.columns(2)
         with c1:
             st.subheader("ANOVA Data")
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
-            #@st.cache (ttl = 600)
-            def upload_gs(x):
-                out = pd.read_csv(x)
-                return out
-
-            df = upload_gs(URL)
+            if st.button('Refresh'):
+                df = pd.read_csv(URL)
+                df = df.dropna(axis=1, how="all")  
+            df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
             st.dataframe(df.assign(hack='').set_index('hack')) 
             global numeric_columns
@@ -81,7 +79,7 @@ def app():
         c1,c2 = st.columns(2)
         with c1:
             st.subheader("ANOVA Statistics")
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","ANOVA")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'

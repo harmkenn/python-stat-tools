@@ -16,16 +16,15 @@ def app():
     if t_choice == "One Sample Data":
         c1,c2,c3 = st.columns((2,1,2))
         with c1:
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
-            #@st.cache (ttl = 600)
-            def upload_gs(x):
-                out = pd.read_csv(x)
-                return out
+            if st.button('Refresh'):
+                df = pd.read_csv(URL)
+                df = df.dropna(axis=1, how="all")  
 
-            df = upload_gs(URL)
+            df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
             st.dataframe(df.assign(hack='').set_index('hack')) 
             global numeric_columns
@@ -112,7 +111,7 @@ def app():
     if t_choice == "Paired Sample Data":
         c1,c2,c3 = st.columns((2,1,2))
         with c1:
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Paired")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
@@ -212,7 +211,7 @@ def app():
     if t_choice == "Two Sample Data":
         c1,c2,c3,c4 = st.columns((2,2,1,1))
         with c1:
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'

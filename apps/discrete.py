@@ -16,11 +16,14 @@ def app():
     if prob_choice == "Discrete Probability":
         columns = st.columns(2)
         with columns[0]:
-            st.subheader("Discrete Probaility")
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            #st.subheader("Discrete Probaility")
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Prob")
-            URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'    
+            URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'  
+            if st.button('Refresh'):
+                df = pd.read_csv(URL)
+                df = df.dropna(axis=1, how="all")  
             df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
             x = df["X"]
