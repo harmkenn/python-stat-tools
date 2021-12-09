@@ -7,7 +7,7 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Chi-Square")
+    st.markdown("Chi-Square")
     
     t_choice = st.sidebar.radio("Chi-Square Test",["Chi-Square Test","Goodness of Fit"])
     

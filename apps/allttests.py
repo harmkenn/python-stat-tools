@@ -12,7 +12,7 @@ import statistics as stats
 def app():
     # title of the app
     t_choice = st.sidebar.radio("T-Test Settings",["One Sample Data","Paired Sample Data","Two Sample Data","One Sample Stats","Two Sample Stats"])
-     
+    st.markdown('All t-Tests') 
     if t_choice == "One Sample Data":
         c1,c2,c3 = st.columns((2,1,2))
         with c1:

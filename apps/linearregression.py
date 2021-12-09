@@ -8,7 +8,7 @@ import pingouin as pg
 
 def app():
     # title of the app
-    st.subheader("Linear Regression") 
+    st.markdown("Linear Regression") 
     lrplot = ggplot() + coord_fixed(ratio = .1)
     c1,c2 = st.columns(2)
     with c1:

@@ -8,10 +8,11 @@ def app():
     # title of the app
     
     anova_choice = st.sidebar.radio("ANOVA Choice",["Data","Statistics"])
+    st.markdown('ANOVA') 
     if anova_choice == "Data":
         c1,c2 = st.columns(2)
         with c1:
-            st.subheader("ANOVA Data")
+            
             gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")

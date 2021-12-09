@@ -12,7 +12,7 @@ def app():
     # add a select widget to the side bar
     st.sidebar.subheader("Discrete Probaility")
     prob_choice = st.sidebar.radio("",["Discrete Probability","Binomial Probability","Geometric Probability","Poisson Probability"])
-    
+    st.markdown('Discrete Probability') 
     if prob_choice == "Discrete Probability":
         columns = st.columns(2)
         with columns[0]:

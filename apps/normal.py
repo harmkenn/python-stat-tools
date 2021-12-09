@@ -7,7 +7,7 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Normal Probaility")
+    st.markdown("Normal Probaility")
     st.sidebar.subheader("Normal Settings")
     norm_choice = st.sidebar.radio("",["z to Probability","Probability to z"])
     
