@@ -26,15 +26,15 @@ def app():
                 df = df.dropna(axis=1, how="all")  
             df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
-            x = df["X"]
-            p_x = df["Prob(X)"]
+            x = df[df.columns[0]]
+            p_x = df[df.columns[1]]
             m =  sum(x*p_x)  
             sd = math.sqrt(sum((x-m)**2*p_x))
             data = pd.DataFrame({"Mean":m,"Std Dev":sd},index = [0])
         with columns[1]:
             st.write(df),st.write(data)
         with columns[0]:
-            dph = ggplot(df) + geom_bar(aes(x=df["X"],weight=df["Prob(X)"]),color="darkblue", fill="lightblue")
+            dph = ggplot(df) + geom_bar(aes(x=df[df.columns[0]],weight=df[df.columns[1]]),color="darkblue", fill="lightblue")
             st.pyplot(ggplot.draw(dph))
     
     if prob_choice == "Binomial Probability":
