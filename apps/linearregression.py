@@ -8,20 +8,18 @@ import pingouin as pg
 
 def app():
     # title of the app
-    st.subheader("Linear Regression") 
+    st.markdown("Linear Regression") 
     lrplot = ggplot() + coord_fixed(ratio = .1)
     c1,c2 = st.columns(2)
     with c1:
-        gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+        gs_URL = st.session_state.gs_URL 
         googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
         worksheetName = st.text_input("Sheet Name:","Bivariate")
         URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
-        #@st.cache (ttl = 600)
-        def upload_gs(x):
-            out = pd.read_csv(x)
-            return out
-
-        df = upload_gs(URL)
+        if st.button('Refresh'):
+            df = pd.read_csv(URL)
+            df = df.dropna(axis=1, how="all")  
+        df = pd.read_csv(URL)
         df = df.dropna(axis=1, how="all")
         st.dataframe(df.assign(hack='').set_index('hack')) 
         global numeric_columns
@@ -31,8 +29,8 @@ def app():
         non_numeric_columns.append(None)
         non_numeric_columns.reverse()
         st.sidebar.markdown('Regression Settings')
-        xvar = st.sidebar.selectbox('X-Axis', options=numeric_columns)
-        yvar = st.sidebar.selectbox('Y-Axis', options=numeric_columns)
+        xvar = st.sidebar.selectbox('X-Axis', options=numeric_columns, index = 0)
+        yvar = st.sidebar.selectbox('Y-Axis', options=numeric_columns, index = 1)
         cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
         if cat != None:
             allcat = list(df[cat].unique())
@@ -76,25 +74,26 @@ def app():
             st.write("Shapiro p-Value: " + str(ddd))    
     with d2:
         gx =  float(st.text_input("Given X:",0)) 
-        py = intercept + slope*gx
-        st.markdown("Predicted y: "+str(py))  
-        alpha = float(st.text_input("alpha",.05))
-        cl = 1-alpha
-        n = len(fsdf)
-        meanx = np.mean(fsdf[xvar])
-        sdx = np.std(fsdf[xvar])
-        dof = n-2
-        ctv = sp.stats.t.ppf(alpha/2,dof) 
-        slower = slope + ctv*ses
-        shigher = slope - ctv*ses
-        st.markdown(str(100*cl)+"'%' confidnce interval for slope: ("+str(slower)+","+str(shigher)+")")
-        seyhat = sr*np.sqrt(1+1/n+(gx-meanx)**2/((n-1)*sdx**2))
-        pime = ctv*seyhat
-        plower = py + pime
-        phigher = py - pime         
-        st.markdown(str(100*cl)+"'%' prediction interval for y when x = "+str(gx)+": ("+str(plower)+","+str(phigher)+")")
-        semuhat = sr*np.sqrt(1/n+(gx-meanx)**2/((n-1)*sdx**2))
-        cimy = ctv*semuhat
-        clower = py + cimy
-        chigher = py - cimy 
-        st.markdown(str(100*cl)+"'%' confidence interval for mean y when x = "+str(gx)+": ("+str(clower)+","+str(chigher)+")")
+        if xvar != yvar:
+            py = intercept + slope*gx
+            st.markdown("Predicted y: "+str(py))  
+            alpha = float(st.text_input("alpha",.05))
+            cl = 1-alpha
+            n = len(fsdf)
+            meanx = np.mean(fsdf[xvar])
+            sdx = np.std(fsdf[xvar])
+            dof = n-2
+            ctv = sp.stats.t.ppf(alpha/2,dof) 
+            slower = slope + ctv*ses
+            shigher = slope - ctv*ses
+            st.markdown(str(100*cl)+"'%' confidnce interval for slope: ("+str(slower)+","+str(shigher)+")")
+            seyhat = sr*np.sqrt(1+1/n+(gx-meanx)**2/((n-1)*sdx**2))
+            pime = ctv*seyhat
+            plower = py + pime
+            phigher = py - pime         
+            st.markdown(str(100*cl)+"'%' prediction interval for y when x = "+str(gx)+": ("+str(plower)+","+str(phigher)+")")
+            semuhat = sr*np.sqrt(1/n+(gx-meanx)**2/((n-1)*sdx**2))
+            cimy = ctv*semuhat
+            clower = py + cimy
+            chigher = py - cimy 
+            st.markdown(str(100*cl)+"'%' confidence interval for mean y when x = "+str(gx)+": ("+str(clower)+","+str(chigher)+")")

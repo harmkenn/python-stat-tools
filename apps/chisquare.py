@@ -7,23 +7,21 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Chi-Square")
+    st.markdown("Chi-Square")
     
     t_choice = st.sidebar.radio("Chi-Square Test",["Chi-Square Test","Goodness of Fit"])
     
     if t_choice == "Chi-Square Test":
         c1,c2 = st.columns((1,1))
         with c1:
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Chi")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
-            #@st.cache (ttl = 600)
-            def upload_gs(x):
-                out = pd.read_csv(x)
-                return out
-
-            df = upload_gs(URL)
+            if st.button('Refresh'):
+                df = pd.read_csv(URL)
+                df = df.dropna(axis=1, how="all")  
+            df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
             df = df.set_index('Chi')
             obc = df.values
@@ -68,7 +66,7 @@ def app():
     if t_choice == "Goodness of Fit":
         c1,c2 = st.columns(2)
         with c1:
-            gs_URL = st.text_input("Public Google Sheet URL:","https://docs.google.com/spreadsheets/d/1Fx7f6rM5Ce331F9ipsEMn-xRjUKYiR3R_v9IDBusUUY/edit#gid=0") 
+            gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","GOF")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'

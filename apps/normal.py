@@ -7,23 +7,32 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Normal Probaility")
+    st.markdown("Normal Probaility")
     st.sidebar.subheader("Normal Settings")
     norm_choice = st.sidebar.radio("",["z to Probability","Probability to z"])
+    
+    # initialize Session_state variables
+    if 'lz' not in st.session_state: 
+        st.session_state.lz = -1
+        st.session_state.rz = 1
+        st.session_state.zpc = True
+    lz = st.session_state.lz
+    rz = st.session_state.rz
+    zpc = st.session_state.zpc
     
     if norm_choice == "z to Probability":
         c2,c3,c4 = st.columns(3)
         tp = 0
 
         with c2:
-            lz = float(st.text_input("Left Z", -1))
+            lz = float(st.text_input("Left Z",lz))
         with c3:
             st.markdown("Shade:")
             ls = float(st.checkbox("Left"))
-            cs = float(st.checkbox("Center"))
+            zpc = float(st.checkbox("Center",zpc))
             rs = float(st.checkbox("Right"))
         with c4:
-            rz = float(st.text_input("Right Z",1))
+            rz = float(st.text_input("Right Z",rz))
         g1,g2 = st.columns((1,3))
         
         with g2:
@@ -36,7 +45,7 @@ def app():
             if ls:
                 tp = tp + norm.cdf(lz)
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (-4,lz))
-            if cs:
+            if zpc:
                 tp = tp + norm.cdf(rz) - norm.cdf(lz)
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (lz,rz))
             if rs:
@@ -88,5 +97,10 @@ def app():
             st.pyplot(ggplot.draw(normp))
         with g1:
             st.markdown(f"z-Score: {z}")
+            
+    # store variables
+    st.session_state.lz = lz
+    st.session_state.rz = rz
+    st.session_state.zpc = zpc
 
     

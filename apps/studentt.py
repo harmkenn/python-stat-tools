@@ -7,7 +7,7 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Student t Probability")
+    st.markdown("Student t Probability")
     st.sidebar.subheader("t Settings")
     t_choice = st.sidebar.radio("",["t to Probability","Probability to t"])
     df = int(st.sidebar.text_input("Degrees of Freedom:",2))

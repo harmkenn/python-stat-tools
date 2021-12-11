@@ -7,7 +7,7 @@ from plotnine import *
 
 def app():
     # title of the app
-    st.subheader("Proportions")
+    st.markdown("Proportions")
     st.sidebar.subheader("Proportion Settings")
     prop_choice = st.sidebar.radio("",["One Proportion","Two Proportions"])
     
