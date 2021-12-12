@@ -12,12 +12,12 @@ def app():
     norm_choice = st.sidebar.radio("",["z to Probability","Probability to z"])
     
     # initialize Session_state variables
-    if 'lz' not in st.session_state: 
-        st.session_state.lz = -1
-        st.session_state.rz = 1
+    if 'lzp' not in st.session_state: 
+        st.session_state.lzp = -1
+        st.session_state.rzp = 1
         st.session_state.zpc = True
-    lz = st.session_state.lz
-    rz = st.session_state.rz
+    lzp = st.session_state.lzp
+    rzp = st.session_state.rzp
     zpc = st.session_state.zpc
     
     if norm_choice == "z to Probability":
@@ -25,14 +25,14 @@ def app():
         tp = 0
 
         with c2:
-            lz = float(st.text_input("Left Z",lz))
+            lzp = float(st.text_input("Left Z",lzp))
         with c3:
             st.markdown("Shade:")
             ls = float(st.checkbox("Left"))
             zpc = float(st.checkbox("Center",zpc))
             rs = float(st.checkbox("Right"))
         with c4:
-            rz = float(st.text_input("Right Z",rz))
+            rzp = float(st.text_input("Right Z",rzp))
         g1,g2 = st.columns((1,3))
         
         with g2:
@@ -40,19 +40,20 @@ def app():
             y = norm.pdf(x)
             ndf = pd.DataFrame({"x":x,"y":y})
 
-            normp = ggplot(ndf) + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) 
+            normp = ggplot(ndf)  
 
             if ls:
-                tp = tp + norm.cdf(lz)
-                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (-4,lz))
+                tp = tp + norm.cdf(lzp)
+                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (-4,lzp))
             if zpc:
-                tp = tp + norm.cdf(rz) - norm.cdf(lz)
-                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (lz,rz))
+                tp = tp + norm.cdf(rzp) - norm.cdf(lzp)
+                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (lzp,rzp))
             if rs:
-                tp = tp + 1 - norm.cdf(rz)
+                tp = tp + 1 - norm.cdf(rzp)
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (rz,4))
-            normp = normp + geom_segment(aes(x = lz, y = 0, xend = lz, yend = norm.pdf(lz)),color="red")
-            normp = normp + geom_segment(aes(x = rz, y = 0, xend = rz, yend = norm.pdf(rz)),color="red")
+            normp = normp + geom_segment(aes(x = lzp, y = 0, xend = lzp, yend = norm.pdf(lzp)),color="red")
+            normp = normp + geom_segment(aes(x = rzp, y = 0, xend = rzp, yend = norm.pdf(rzp)),color="red")
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4)
             
             st.pyplot(ggplot.draw(normp))
         with g1:
@@ -93,14 +94,14 @@ def app():
                 
             normp = normp + geom_segment(aes(x = lz, y = 0, xend = lz, yend = norm.pdf(lz)),color="red")
             normp = normp + geom_segment(aes(x = rz, y = 0, xend = rz, yend = norm.pdf(rz)),color="red")
-            
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4)
             st.pyplot(ggplot.draw(normp))
         with g1:
             st.markdown(f"z-Score: {z}")
             
     # store variables
-    st.session_state.lz = lz
-    st.session_state.rz = rz
+    st.session_state.lzp = lzp
+    st.session_state.rzp = rzp
     st.session_state.zpc = zpc
 
     

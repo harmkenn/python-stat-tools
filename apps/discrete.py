@@ -15,7 +15,7 @@ def app():
     st.markdown('Discrete Probability') 
     if prob_choice == "Discrete Probability":
         top = st.columns((1,1,2))
-        bottom = st.columns((1,3))
+        bottom = st.columns((1,1))
         with top[0]:
             #st.subheader("Discrete Probaility")
             gs_URL = st.session_state.gs_URL 
