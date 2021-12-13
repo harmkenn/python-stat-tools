@@ -5,7 +5,7 @@ from plotnine import *
 from plotly.tools import mpl_to_plotly as ggplotly
 import numpy as np
 import math
-from scipy.stats import *
+import scipy.stats as ss
 
 
 def app():
@@ -14,32 +14,73 @@ def app():
     prob_choice = st.sidebar.radio("",["Discrete Probability","Binomial Probability","Geometric Probability","Poisson Probability"])
     st.markdown('Discrete Probability') 
     if prob_choice == "Discrete Probability":
-        columns = st.columns(2)
-        with columns[0]:
+        top = st.columns((1,1,2))
+        bottom = st.columns((1,1))
+        with top[0]:
             #st.subheader("Discrete Probaility")
             gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
-            worksheetName = st.text_input("Sheet Name:","Prob")
+            worksheetName = st.text_input("Sheet Name:","Discrete")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'  
             if st.button('Refresh'):
                 df = pd.read_csv(URL)
                 df = df.dropna(axis=1, how="all")  
             df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
-            x = df[df.columns[0]]
-            p_x = df[df.columns[1]]
+            with bottom[0]:
+                st.dataframe(df)
+            global numeric_columns
+            global non_numeric_columns
+            try:
+                numeric_columns = list(df.select_dtypes(['float', 'int']).columns)
+                non_numeric_columns = list(df.select_dtypes(['object']).columns)
+            except Exception as e:
+                print(e)
+                st.write("Please upload file to the application.")
+        with top[1]:
+            x_axis = st.selectbox('X-Axis', options=numeric_columns, index=0)
+            prob = st.selectbox('Probabilities', options=numeric_columns, index = 1)
+            cat = 0
+            if len(non_numeric_columns) >= 1: 
+                cat = 1
+                #cv = st.selectbox("Group", options=list(df[non_numeric_columns[0]].unique()))    
+        if cat == 0:
+            x = df[x_axis]
+            p_x = df[prob]
             m =  sum(x*p_x)  
             sd = math.sqrt(sum((x-m)**2*p_x))
             data = pd.DataFrame({"Mean":m,"Std Dev":sd},index = [0])
-        with columns[1]:
-            st.write(df),st.write(data)
-        with columns[0]:
-            dph = ggplot(df) + geom_bar(aes(x=df[df.columns[0]],weight=df[df.columns[1]]),color="darkblue", fill="lightblue")
-            st.pyplot(ggplot.draw(dph))
+            with top[2]:
+                dph = ggplot(df) + geom_bar(aes(x=df[df.columns[0]],weight=df[df.columns[1]]),color="darkblue", fill="lightblue")
+                st.pyplot(ggplot.draw(dph))
+            with bottom[1]:
+                st.write(data)
+        if cat != 0:
+            with bottom[1]:
+                data = pd.DataFrame(columns = ['Type','Mean','Standard Deviation'])
+                drow = 0
+                for type in list(df[non_numeric_columns[0]].unique()):
+                    df1 = df[df[non_numeric_columns[0]]==type]
+                    x = df1[x_axis]
+                    p_x = df1[prob]
+                    data.loc[drow,'Type'] = type
+                    m = sum(x*p_x)
+                    data.loc[drow,'Mean'] =  m  
+                    data.loc[drow,'Standard Deviation'] = math.sqrt(sum((x-m)**2*p_x))
+                    drow = +1
+                st.dataframe(data)
+                    
+            with top[2]:
+                dph = ggplot(df) + geom_bar(aes(x=df[x_axis],weight=df[prob],fill=non_numeric_columns[0],color=non_numeric_columns[0]),position= "identity", alpha = .4)
+                st.pyplot(ggplot.draw(dph))
+
+            
+            
+        
     
     if prob_choice == "Binomial Probability":
-        columns = st.columns(2)
-        with columns[0]:
+        top = st.columns(2)
+        with top[0]:
             st.subheader("Binomial Probability")
             bip, bit, bih = st.text_input("Hit Probability:",.5),st.text_input("Tries:",10),st.text_input("Hits:",4)
             bit = int(bit)
@@ -53,11 +94,11 @@ def app():
             bm,bv = binom.stats(bit,bip)
             bdf = pd.concat([biah,pmf,cdf],axis=1)
             bdf.columns = ["Hits","PDF","CDF"]
-        with columns[1]:
+        with top[1]:
             st.write(bdf)
             data = pd.DataFrame({"Mean":bm,"Std Dev":math.sqrt(bv)},index = [0])
             st.write(data)
-        with columns[0]:
+        with top[0]:
             bph = ggplot(bdf) + geom_bar(aes(x=bdf["Hits"],weight=bdf["PDF"]),color="darkblue", fill="lightblue")
             st.pyplot(ggplot.draw(bph))
         

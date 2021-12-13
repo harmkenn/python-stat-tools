@@ -11,8 +11,9 @@ def app():
     # Add a sidebar
     st.sidebar.subheader("Graph Settings")
     
-    columns = st.columns((1,2))
-    with columns[0]:
+    top = st.columns((1,2))
+    bottom = st.columns(1)
+    with top[0]:
         gs_URL = st.session_state.gs_URL
         googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
         worksheetName = st.text_input("Sheet Name:","Bivariate")
@@ -92,14 +93,14 @@ def app():
             p = p + geom_point(aes(x=x,y=y))
     
     
-    with columns[1]:
+    with top[1]:
         st.pyplot(ggplot.draw(p))
 
-    with columns[0]:
+    with top[0]:
         st.write(df)
     
-    back = st.columns(1)
-    with back[0]:
+    
+    with bottom[0]:
         st.write(df.describe().T)
         if cv != None:
             st.write(df.groupby([cv]).describe())

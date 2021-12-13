@@ -29,8 +29,8 @@ def app():
         non_numeric_columns.append(None)
         non_numeric_columns.reverse()
         st.sidebar.markdown('Regression Settings')
-        xvar = st.sidebar.selectbox('X-Axis', options=numeric_columns)
-        yvar = st.sidebar.selectbox('Y-Axis', options=numeric_columns)
+        xvar = st.sidebar.selectbox('X-Axis', options=numeric_columns, index = 0)
+        yvar = st.sidebar.selectbox('Y-Axis', options=numeric_columns, index = 1)
         cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
         if cat != None:
             allcat = list(df[cat].unique())
