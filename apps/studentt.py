@@ -48,7 +48,7 @@ def app():
                 tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
             tplot = tplot + geom_segment(aes(x = lt, y = 0, xend = lt, yend = scipy.stats.t.pdf(lt,df)),color="red")
             tplot = tplot + geom_segment(aes(x = rt, y = 0, xend = rt, yend = scipy.stats.t.pdf(rt,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=ty))
+            tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('') + ylab('')
             
             st.pyplot(ggplot.draw(tplot))
         with g1:
@@ -100,7 +100,7 @@ def app():
                 
             tplot = tplot + geom_segment(aes(x = lt, y = 0, xend = lt, yend = scipy.stats.t.pdf(lt,df)),color="red")
             tplot = tplot + geom_segment(aes(x = rt, y = 0, xend = rt, yend = scipy.stats.t.pdf(rt,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=y))
+            tplot = tplot + geom_line(aes(x=x,y=y)) + xlab('') + ylab('')
             
             st.pyplot(ggplot.draw(tplot))
         with g1:

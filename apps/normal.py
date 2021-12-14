@@ -94,7 +94,7 @@ def app():
                 
             normp = normp + geom_segment(aes(x = lz, y = 0, xend = lz, yend = norm.pdf(lz)),color="red")
             normp = normp + geom_segment(aes(x = rz, y = 0, xend = rz, yend = norm.pdf(rz)),color="red")
-            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4)
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('') + ylab('')
             st.pyplot(ggplot.draw(normp))
         with g1:
             st.markdown(f"z-Score: {z}")
