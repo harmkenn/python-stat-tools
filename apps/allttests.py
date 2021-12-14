@@ -102,7 +102,7 @@ def app():
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=ty))
+            tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('t') + ylab('')
             st.pyplot(ggplot.draw(tplot))
             lower = xbar - abs(me)
             upper = xbar + abs(me) 
@@ -202,7 +202,7 @@ def app():
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=ty))
+            tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('t') + ylab('')
             st.pyplot(ggplot.draw(tplot))
             lower = xbar - abs(me)
             upper = xbar + abs(me) 
@@ -322,7 +322,7 @@ def app():
                 st.write(data) 
             with d3:
                 tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
-                tplot = tplot + geom_line(aes(x=x,y=ty))
+                tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('t') + ylab('')
                 st.pyplot(ggplot.draw(tplot))
                 lower = xbard - abs(me)
                 upper = xbard + abs(me) 
@@ -377,7 +377,7 @@ def app():
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=ty))
+            tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('t') + ylab('')
             st.pyplot(ggplot.draw(tplot))
             lower = xbar - abs(me)
             upper = xbar + abs(me) 
@@ -446,7 +446,7 @@ def app():
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
-            tplot = tplot + geom_line(aes(x=x,y=ty))
+            tplot = tplot + geom_line(aes(x=x,y=ty)) + xlab('t') + ylab('')
             st.pyplot(ggplot.draw(tplot))
             lower = xbard - abs(me)
             upper = xbard + abs(me) 

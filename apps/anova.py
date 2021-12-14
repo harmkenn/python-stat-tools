@@ -73,7 +73,7 @@ def app():
             Fplot = Fplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
             Fplot = Fplot + geom_col(aes(x=x,y="alpha"), fill = "red", size = .1, alpha = .4)
             Fplot = Fplot + geom_segment(aes(x = aF, y = 0, xend = aF, yend = sp.stats.f.pdf(aF,bdf,wdf)),color="red")
-            Fplot = Fplot + geom_line(aes(x=x,y=Fy))
+            Fplot = Fplot + geom_line(aes(x=x,y=Fy)) + xlab('F') + ylab('')
             st.pyplot(ggplot.draw(Fplot))
     
     if anova_choice == "Statistics":
@@ -134,6 +134,6 @@ def app():
             Fplot = Fplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
             Fplot = Fplot + geom_col(aes(x=x,y="alpha"), fill = "red", size = .1, alpha = .4)
             Fplot = Fplot + geom_segment(aes(x = aF, y = 0, xend = aF, yend = sp.stats.f.pdf(aF,bdf,wdf)),color="red")
-            Fplot = Fplot + geom_line(aes(x=x,y=Fy))
+            Fplot = Fplot + geom_line(aes(x=x,y=Fy)) + xlab('F') + ylab('')
             st.pyplot(ggplot.draw(Fplot))        
     

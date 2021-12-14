@@ -74,6 +74,7 @@ def app():
                     
             with top[2]:
                 dph = ggplot(df) + geom_bar(aes(x=df[x_axis],weight=df[prob],fill=non_numeric_columns[0],color=non_numeric_columns[0]),position= "identity", alpha = .4)
+                
                 st.pyplot(ggplot.draw(dph))
 
             

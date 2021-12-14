@@ -53,7 +53,7 @@ def app():
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (rzp,4))
             normp = normp + geom_segment(aes(x = lzp, y = 0, xend = lzp, yend = norm.pdf(lzp)),color="red")
             normp = normp + geom_segment(aes(x = rzp, y = 0, xend = rzp, yend = norm.pdf(rzp)),color="red")
-            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('') + ylab('')
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('z') + ylab('')
             
             st.pyplot(ggplot.draw(normp))
         with g1:
@@ -94,7 +94,7 @@ def app():
                 
             normp = normp + geom_segment(aes(x = lz, y = 0, xend = lz, yend = norm.pdf(lz)),color="red")
             normp = normp + geom_segment(aes(x = rz, y = 0, xend = rz, yend = norm.pdf(rz)),color="red")
-            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('') + ylab('')
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('z') + ylab('')
             st.pyplot(ggplot.draw(normp))
         with g1:
             st.markdown(f"z-Score: {z}")

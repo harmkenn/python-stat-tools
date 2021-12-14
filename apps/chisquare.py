@@ -104,5 +104,5 @@ def app():
             chiplot = chiplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
             chiplot = chiplot + geom_col(aes(x=x,y="alpha"), fill = "red", size = .1, alpha = .4)
             chiplot = chiplot + geom_segment(aes(x = tcs, y = 0, xend = tcs, yend = sp.stats.t.pdf(tcs,dof)),color="red")
-            chiplot = chiplot + geom_line(aes(x=x,y=chiy))
+            chiplot = chiplot + geom_line(aes(x=x,y=chiy)) + xlab('chi') + ylab('')
             st.pyplot(ggplot.draw(chiplot))
