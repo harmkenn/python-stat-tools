@@ -50,10 +50,10 @@ def app():
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (lzp,rzp))
             if rs:
                 tp = tp + 1 - norm.cdf(rzp)
-                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (rz,4))
+                normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "steelblue", xlim = (rzp,4))
             normp = normp + geom_segment(aes(x = lzp, y = 0, xend = lzp, yend = norm.pdf(lzp)),color="red")
             normp = normp + geom_segment(aes(x = rzp, y = 0, xend = rzp, yend = norm.pdf(rzp)),color="red")
-            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4)
+            normp = normp + geom_line(aes(x=x,y=y)) + coord_fixed(ratio = 4) + xlab('') + ylab('')
             
             st.pyplot(ggplot.draw(normp))
         with g1:

@@ -6,6 +6,8 @@ from plotly.tools import mpl_to_plotly as ggplotly
 import numpy as np
 import math
 import scipy.stats as ss
+from scipy.stats import *
+
 
 
 def app():
