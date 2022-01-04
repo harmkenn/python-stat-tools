@@ -11,15 +11,10 @@ def app():
     st.sidebar.subheader("Normal Settings")
     norm_choice = st.sidebar.radio("",["z to Probability","Probability to z"])
     
-    # initialize Session_state variables
-    if 'lzp' not in st.session_state: 
-        st.session_state.lzp = -1
-        st.session_state.rzp = 1
-        st.session_state.zpc = True
     lzp = st.session_state.lzp
     rzp = st.session_state.rzp
     zpc = st.session_state.zpc
-    
+     
     if norm_choice == "z to Probability":
         c2,c3,c4 = st.columns(3)
         tp = 0
