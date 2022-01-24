@@ -15,15 +15,8 @@ app.add_app("Chi-Square", chisquare.app)
 app.add_app("Linear Regression", linearregression.app)
 app.add_app("ANOVA", anova.app)
 
-# initialize Session_state variables
-if 'save' not in st.session_state: 
-    st.session_state.save = 1
-    st.session_state.lzp = -1
-    st.session_state.rzp = 1
-    st.session_state.zpc = True
-    st.session_state.bip = .5
-    st.session_state.bit = 10
-    st.session_state.gip = .5
+    
+    
 
 # The main app
 app.run()

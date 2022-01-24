@@ -115,7 +115,7 @@ def app():
         again = st.columns(2)    
         with again[0]:   
             st.subheader("Geometric Probability")
-            gip, gih = st.text_input("Hit Probability:",gip,key ="1"),st.text_input("Hits:",4,key="2")
+            gip, gih = st.text_input("Hit Probability:",gip,key ="1"),st.text_input("Tries:",4,key="2")
             gip = float(gip)
             gih = int(gih)
             giah = np.r_[0:gih+6]

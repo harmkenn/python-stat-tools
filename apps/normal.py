@@ -10,24 +10,21 @@ def app():
     st.markdown("Normal Probaility")
     st.sidebar.subheader("Normal Settings")
     norm_choice = st.sidebar.radio("",["z to Probability","Probability to z"])
-    
-    lzp = st.session_state.lzp
-    rzp = st.session_state.rzp
-    zpc = st.session_state.zpc
-     
+
     if norm_choice == "z to Probability":
         c2,c3,c4 = st.columns(3)
         tp = 0
 
         with c2:
-            lzp = float(st.text_input("Left Z",lzp))
+            lzp = float(st.text_input("Left Z",-1))
         with c3:
             st.markdown("Shade:")
             ls = float(st.checkbox("Left"))
-            zpc = float(st.checkbox("Center",zpc))
+            zpc = float(st.checkbox("Center",1))
             rs = float(st.checkbox("Right"))
         with c4:
-            rzp = float(st.text_input("Right Z",rzp))
+            rzp = float(st.text_input("Right Z",1))
+           
         g1,g2 = st.columns((1,3))
         
         with g2:
@@ -95,8 +92,6 @@ def app():
             st.markdown(f"z-Score: {z}")
             
     # store variables
-    st.session_state.lzp = lzp
-    st.session_state.rzp = rzp
-    st.session_state.zpc = zpc
+
 
     

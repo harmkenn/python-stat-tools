@@ -21,7 +21,7 @@ def app():
         with c3:
             st.markdown("Shade:")
             ls = st.checkbox("Left")
-            cs = st.checkbox("Center")
+            cs = st.checkbox("Center",1)
             rs = st.checkbox("Right")
         with c4:
             rt = float(st.text_input("Right t",1))
