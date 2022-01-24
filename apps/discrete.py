@@ -82,13 +82,11 @@ def app():
         
     
     if prob_choice == "Binomial Probability":
-        bip = st.session_state.bip
-        bit = st.session_state.bit
         
         top = st.columns(2)
         with top[0]:
             st.subheader("Binomial Probability")
-            bip, bit, bih = st.text_input("Hit Probability:",bip),st.text_input("Tries:",bit),st.text_input("Hits:",0)
+            bip, bit, bih = st.text_input("Hit Probability:",.2),st.text_input("Tries:",8),st.text_input("Hits:",0)
             bit = int(bit)
             bip = float(bip)
             biah = np.r_[0:bit+1]
