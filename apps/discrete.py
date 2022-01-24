@@ -105,15 +105,14 @@ def app():
         with top[0]:
             bph = ggplot(bdf) + geom_bar(aes(x=bdf["Hits"],weight=bdf["PDF"]),color="darkblue", fill="lightblue")
             st.pyplot(ggplot.draw(bph))
-        st.session_state.bip = bip
-        st.session_state.bit = bit
+
         
     if prob_choice == "Geometric Probability": 
-        gip = st.session_state.gip     
+
         again = st.columns(2)    
         with again[0]:   
             st.subheader("Geometric Probability")
-            gip, gih = st.text_input("Hit Probability:",gip,key ="1"),st.text_input("Tries:",4,key="2")
+            gip, gih = st.text_input("Hit Probability:",.2,key ="1"),st.text_input("Tries:",4,key="2")
             gip = float(gip)
             gih = int(gih)
             giah = np.r_[0:gih+6]
@@ -132,7 +131,7 @@ def app():
         with again[0]:
             gph = ggplot(gdf) + geom_bar(aes(x=gdf["Hits"],weight=gdf["PDF"]),color="darkblue", fill="lightblue")
             st.pyplot(ggplot.draw(gph))
-        st.session_state.gip = gip
+
 
     if prob_choice == "Poisson Probability":      
         again = st.columns(2)     
