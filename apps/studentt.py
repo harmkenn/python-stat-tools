@@ -10,7 +10,6 @@ def app():
     st.markdown("Student t Probability")
     st.sidebar.subheader("t Settings")
     t_choice = st.sidebar.radio("",["t to Probability","Probability to t"])
-    df = int(st.sidebar.text_input("Degrees of Freedom:",2))
     
     if t_choice == "t to Probability":
         c2,c3,c4 = st.columns(3)
@@ -27,6 +26,9 @@ def app():
             rt = float(st.text_input("Right t",1))
         
         g1,g2 = st.columns((1,3))
+        with g1:
+            df = int(st.text_input("Degrees of Freedom:",2))
+    
         with g2:
             x = np.arange(-5,5,.1)
             ny = scipy.stats.norm.pdf(x)
@@ -65,6 +67,8 @@ def app():
             shade = st.radio("Shade:",["Left","Center","Right"])
         
         g1,g2 = st.columns((1,3))
+        with g1:
+            df = int(st.text_input("Degrees of Freedom:",2))
         with g2:
             x = np.arange(-5,5,.1)
             y = scipy.stats.t.pdf(x,df)

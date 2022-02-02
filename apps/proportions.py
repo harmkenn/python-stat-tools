@@ -58,7 +58,7 @@ def app():
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "orange", xlim = (cz,4))
             me = cz * cise
             rme = "±" + str(abs(me))
-            data = pd.DataFrame({"p-Hat":p_hat,"z-Score":z,"p-Value":pv,"CV":rcz,"Test SD":tsd,"C-Level":cl,"CI SE":cise,"ME":rme},index = [0])  
+            data = pd.DataFrame({"p-Hat":p_hat,"z-Score":z,"p-Value":pv,"CV z*":rcz,"Test SD":tsd,"C-Level":cl,"CI SE":cise,"ME":rme},index = [0])  
             st.write(data)
             normp = normp + geom_segment(aes(x = z, y = 0, xend = z, yend = norm.pdf(z)),color="red")
             normp = normp + geom_line(aes(x=x,y=y)) + xlab('z') + ylab('')
@@ -124,7 +124,7 @@ def app():
                 normp = normp + stat_function(fun = norm.pdf, geom = "area",fill = "orange", xlim = (cz,4))
             me = cz * cise
             rme = "±" + str(abs(me))
-            data = pd.DataFrame({"p-Hat 1":p_hat1,"p-Hat 2":p_hat2,"Pooled p-Hat":pp_hat,"Diff p-Hat":dp_hat,"z-Score":z,"p-Value":pv,"CV":rcz,"Test SD":tsd,"C-Level":cl,"CI SE":cise,"ME":rme},index = [0])  
+            data = pd.DataFrame({"p-Hat 1":p_hat1,"p-Hat 2":p_hat2,"Pooled p-Hat":pp_hat,"Diff p-Hat":dp_hat,"z-Score":z,"p-Value":pv,"CV z*":rcz,"Test SD":tsd,"C-Level":cl,"CI SE":cise,"ME":rme},index = [0])  
             st.write(data)
             normp = normp + geom_segment(aes(x = z, y = 0, xend = z, yend = norm.pdf(z)),color="red")
             normp = normp + geom_line(aes(x=x,y=y)) + xlab('z') + ylab('')

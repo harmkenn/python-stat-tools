@@ -98,7 +98,7 @@ def app():
                 tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
                 cl=1-2*alpha
             me = cv*sem
-            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"c-Value":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"CV t*":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
@@ -131,7 +131,7 @@ def app():
             non_numeric_columns.reverse()
             st.sidebar.subheader("Paired Sample Data")
             qb = st.sidebar.selectbox('Before Data', options=numeric_columns)
-            qa = st.sidebar.selectbox('After Data', options=numeric_columns)
+            qa = st.sidebar.selectbox('After Data', options=numeric_columns,index = 1)
             cat = st.sidebar.selectbox('Categorical Data', options=non_numeric_columns)
             df['After-Before'] = df[qa]-df[qb]
             quant = 'After-Before'
@@ -198,7 +198,7 @@ def app():
                 tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
                 cl=1-2*alpha
             me = cv*sem
-            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"c-Value":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"CV t*":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
@@ -232,7 +232,7 @@ def app():
             cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
             allcat = list(df[cat].unique())
             g1 = st.sidebar.selectbox('Group 1',options=allcat) 
-            g2 = st.sidebar.selectbox('Group 2',options=allcat) 
+            g2 = st.sidebar.selectbox('Group 2',options=allcat, index = 1) 
             st.dataframe(df.assign(hack='').set_index('hack')) 
         if g1 == g2:
             with c2:
@@ -318,7 +318,7 @@ def app():
                     tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
                     cl=1-2*alpha
                 me = cv*sem
-                data = pd.DataFrame({"df":df,"x-bar-d":xbard,"sem":sem,"c-Value":cv,"ME":abs(me),"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+                data = pd.DataFrame({"df":df,"x-bar-d":xbard,"sem":sem,"CV t*":cv,"ME":abs(me),"t-Score":ts,"p-Value":pvalue},index = [0]).T 
                 st.write(data) 
             with d3:
                 tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
@@ -373,7 +373,7 @@ def app():
                 tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
                 cl=1-2*alpha
             me = cv*sem
-            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"c-Value":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            data = pd.DataFrame({"n":n,"df":df,"x-bar":xbar,"s":s,"sem":sem,"CV t*":cv,"ME":me,"t-Score":ts,"p-Value":pvalue},index = [0]).T 
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
@@ -442,7 +442,7 @@ def app():
                 tplot = tplot + geom_col(aes(x=x,y="Right"), fill = "steelblue", size = .1, alpha = .4)
                 cl=1-2*alpha
             me = cv*sem
-            data = pd.DataFrame({"df":df,"x-bar-d":xbard,"sem":sem,"c-Value":cv,"ME":abs(me),"t-Score":ts,"p-Value":pvalue},index = [0]).T 
+            data = pd.DataFrame({"df":df,"x-bar-d":xbard,"sem":sem,"CV t*":cv,"ME":abs(me),"t-Score":ts,"p-Value":pvalue},index = [0]).T 
             st.write(data) 
         with d3:
             tplot = tplot + geom_segment(aes(x = ts, y = 0, xend = ts, yend = scipy.stats.t.pdf(ts,df)),color="red")
