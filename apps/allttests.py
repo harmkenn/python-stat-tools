@@ -51,7 +51,8 @@ def app():
                 fsdf = df[quant]
                 st.markdown(f"Quantity: {quant}")
                 st.markdown(f"Category: {cat}")  
-                st.write(pd.DataFrame(fsdf.describe()))
+                qstat = pd.DataFrame(fsdf.describe())
+                st.write(qstat)
             fsdf=pd.DataFrame(fsdf)
         with c3:
             p = pg.qqplot(fsdf[quant], dist='norm')
@@ -66,10 +67,10 @@ def app():
             alpha = float(st.text_input("Alpha:",0.05))
             tail_choice = st.radio("",["Left Tail","Two Tails","Right Tail"])
         with d2:
-            n = len(fsdf)
+            n = qstat.iloc[0,0]
             df = n-1
-            xbar = stats.mean(fsdf[quant])
-            s = stats.stdev(fsdf[quant])
+            xbar = qstat.iloc[1,0]
+            s = qstat.iloc[2,0]
             sem = s/math.sqrt(n)
             ts = (xbar - nh)/sem
             x = np.arange(-5,5,.1)
