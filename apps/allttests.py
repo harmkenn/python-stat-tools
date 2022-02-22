@@ -11,11 +11,12 @@ import statistics as stats
 
 def app():
     # title of the app
-    t_choice = st.sidebar.radio("T-Test Settings",["One Sample Data","Paired Sample Data","Two Sample Data","One Sample Stats","Two Sample Stats"])
-    st.markdown('All t-Tests') 
+    t_choice = st.sidebar.radio("T-Test Settings",["One Sample Data","One Sample Stats","Paired Sample Data","Two Sample Data","Two Sample Stats"])
     if t_choice == "One Sample Data":
-        c1,c2,c3 = st.columns((2,1,2))
+        
+        c1,c2,c3 = st.columns((2,1,1))
         with c1:
+            st.markdown("One Sample Data")
             gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")
@@ -33,14 +34,16 @@ def app():
             non_numeric_columns = list(df.select_dtypes(['object']).columns)
             non_numeric_columns.append(None)
             non_numeric_columns.reverse()
-            st.sidebar.subheader("One Sample Data")
-            quant = st.sidebar.selectbox('Quantitative Data', options=numeric_columns)
-            cat = st.sidebar.selectbox('Categorical Data', options=non_numeric_columns)
+            
             
         with c2:
+            
+            quant = st.selectbox('Quantitative Data', options=numeric_columns)
+            cat = st.selectbox('Categorical Data', options=non_numeric_columns)
+            
             if cat != None:
                 allcat = list(df[cat].unique())
-                cat1 = st.sidebar.selectbox('Category',options=allcat) 
+                cat1 = st.selectbox('Category',options=allcat) 
                 sdf = df[[quant,cat]]
                 fsdf = sdf[sdf[cat]==cat1]
                 st.markdown(f"Quantity: {quant}")
@@ -110,8 +113,9 @@ def app():
             st.write(str(100*cl) + "'%' confidence interval is (" + str(lower) +", "+str(upper)+")") 
     
     if t_choice == "Paired Sample Data":
-        c1,c2,c3 = st.columns((2,1,2))
+        c1,c2,c3 = st.columns((2,1,1))
         with c1:
+            st.markdown("Paired Sample Data")
             gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Paired")
@@ -130,17 +134,18 @@ def app():
             non_numeric_columns = list(df.select_dtypes(['object']).columns)
             non_numeric_columns.append(None)
             non_numeric_columns.reverse()
-            st.sidebar.subheader("Paired Sample Data")
-            qb = st.sidebar.selectbox('Before Data', options=numeric_columns)
-            qa = st.sidebar.selectbox('After Data', options=numeric_columns,index = 1)
-            cat = st.sidebar.selectbox('Categorical Data', options=non_numeric_columns)
+        with c2:    
+            qb = st.selectbox('Before Data', options=numeric_columns)
+            qa = st.selectbox('After Data', options=numeric_columns,index = 1)
+            cat = st.selectbox('Categorical Data', options=non_numeric_columns)
+        with c1:
             df['After-Before'] = df[qa]-df[qb]
             quant = 'After-Before'
             st.dataframe(df.assign(hack='').set_index('hack')) 
         with c2:
             if cat != None:
                 allcat = list(df[cat].unique())
-                cat1 = st.sidebar.selectbox('Category',options=allcat) 
+                cat1 = st.selectbox('Category',options=allcat) 
                 sdf = df[[quant,cat]]
                 fsdf = sdf[sdf[cat]==cat1]
                 st.markdown(f"Quantity: {quant}")
@@ -210,8 +215,9 @@ def app():
             st.write(str(100*cl) + "'%' confidence interval is (" + str(lower) +", "+str(upper)+")") 
             
     if t_choice == "Two Sample Data":
-        c1,c2,c3,c4 = st.columns((2,2,1,1))
+        c1,c2,c3 = st.columns((1,1,1))
         with c1:
+            st.markdown("Two Sample Data")
             gs_URL = st.session_state.gs_URL 
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","Bivariate")
@@ -228,12 +234,13 @@ def app():
             #global non_numeric_columns
             numeric_columns = list(df.select_dtypes(['float', 'int']).columns)
             non_numeric_columns = list(df.select_dtypes(['object']).columns)
-            st.sidebar.subheader("Two Sample Data")
-            quant = st.sidebar.selectbox('Common Variable', options=numeric_columns)
-            cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
+        with c2:    
+            quant = st.selectbox('Common Variable', options=numeric_columns)
+            cat = st.selectbox('Category', options=non_numeric_columns)
             allcat = list(df[cat].unique())
-            g1 = st.sidebar.selectbox('Group 1',options=allcat) 
-            g2 = st.sidebar.selectbox('Group 2',options=allcat, index = 1) 
+            g1 = st.selectbox('Group 1',options=allcat) 
+            g2 = st.selectbox('Group 2',options=allcat, index = 1) 
+        with c1:
             st.dataframe(df.assign(hack='').set_index('hack')) 
         if g1 == g2:
             with c2:
@@ -256,7 +263,7 @@ def app():
                 shap1 = scipy.stats.shapiro(gp1)
                 st.write("Shapiro p-Value: " + str(shap1[1]))
                 
-            with c4:
+            
                 gp2 = fsdf[fsdf[cat]==g2][quant]
                 p = pg.qqplot(gp2, dist='norm')
                 st.pyplot(ggplot.draw(p))
