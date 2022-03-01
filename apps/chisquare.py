@@ -70,12 +70,10 @@ def app():
             googleSheetId = gs_URL.split("spreadsheets/d/")[1].split("/edit")[0]
             worksheetName = st.text_input("Sheet Name:","GOF")
             URL = f'https://docs.google.com/spreadsheets/d/{googleSheetId}/gviz/tq?tqx=out:csv&sheet={worksheetName}'
-            #@st.cache (ttl = 600)
-            def upload_gs(x):
-                out = pd.read_csv(x)
-                return out
-            
-            df = upload_gs(URL)
+            if st.button('Refresh'):
+                df = pd.read_csv(URL)
+                df = df.dropna(axis=1, how="all")  
+            df = pd.read_csv(URL)
             df = df.dropna(axis=1, how="all")
             obs = df['Observed'].values
             obss = obs.sum()

@@ -28,26 +28,23 @@ def app():
         non_numeric_columns = list(df.select_dtypes(['object']).columns)
         non_numeric_columns.append(None)
         non_numeric_columns.reverse()
-        st.sidebar.markdown('Regression Settings')
-        xvar = st.sidebar.selectbox('X-Axis', options=numeric_columns, index = 0)
-        yvar = st.sidebar.selectbox('Y-Axis', options=numeric_columns, index = 1)
-        cat = st.sidebar.selectbox('Category', options=non_numeric_columns)
+    with c2:    
+        xvar = st.selectbox('X-Axis', options=numeric_columns, index = 0)
+        yvar = st.selectbox('Y-Axis', options=numeric_columns, index = 1)
+        cat = st.selectbox('Category', options=non_numeric_columns)
+        
         if cat != None:
             allcat = list(df[cat].unique())
-            cat1 = st.sidebar.selectbox('Variable',options=allcat)
+            cat1 = st.selectbox('Variable',options=allcat)
             sdf = df[[xvar,yvar,cat]]
             fsdf = sdf[sdf[cat]==cat1]
         if cat == None:
             fsdf = sdf = df[[xvar,yvar]]
-    with c2:
+    
         if xvar == yvar:
             st.warning("Select different X-Axis and Y-Axis")
         if xvar != yvar:
-            st.markdown(f"X-Axis: {xvar}")
-            st.markdown(f"Y-Axis: {yvar}")
-            if cat != None:
-                st.markdown(f"Category: {cat}")   
-                st.markdown(f"Variable: {cat1}")  
+            
             fsdfs = fsdf.describe()
             st.dataframe(fsdfs.iloc[0:3,:])
             slope, intercept, r, p, ses = sp.stats.linregress(fsdf[xvar],fsdf[yvar])
