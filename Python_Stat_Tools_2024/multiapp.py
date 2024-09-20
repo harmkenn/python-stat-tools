@@ -24,7 +24,7 @@ class MultiApp:
 
     def run(self):
 
-        st.sidebar.title("Python Stat Tools v2024.2")
+        st.sidebar.title("Python Stat Tools v2024.3")
         st.sidebar.subheader("by Ken Harmon")
         
 
@@ -32,7 +32,7 @@ class MultiApp:
         # Input box for file path
         
         st.session_state.xlsx = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
-        if st.session_state.xlsx is None: st.session_state.xlsx = r"Default.xlsx"
+        if st.session_state.xlsx is None: st.session_state.xlsx = r"Python_Stat_Tools_2024/Default.xlsx"
         #st.session_state.xlsx = st.sidebar.text_input("Enter the path to your .xlsx file:",r"PythonStatsData.xlsx")
         
         st.sidebar.download_button(label="Download Default Excel File", data=open("Python_Stat_Tools_2024/PythonStatsData.xlsx", "rb").read(), file_name="PythonStatsData.xlsx")
