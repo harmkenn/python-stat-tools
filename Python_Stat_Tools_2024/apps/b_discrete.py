@@ -107,13 +107,13 @@ def app():
             pmf = pd.DataFrame(pmf)
             gm,gv = geom.stats(gip)
             gdf = pd.concat([giah,pmf,cdf],axis=1)
-            gdf.columns = ["Hits","PDF","CDF"]
+            gdf.columns = ["Tries","PDF","CDF"]
         with again[1]:
             st.write(gdf)
             data = pd.DataFrame({"Mean":gm,"Std Dev":math.sqrt(gv)},index = [0])
             st.write(data)
         with again[0]:
-            fig = px.bar(gdf, x = 'Hits', y = 'PDF', template= 'simple_white')
+            fig = px.bar(gdf, x = 'Tries', y = 'PDF', template= 'simple_white')
             st.plotly_chart(fig, use_container_width=True)
 
 
