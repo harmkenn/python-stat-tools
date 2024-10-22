@@ -20,7 +20,7 @@ sub_app_names = {
     'd_proportions.py': 'Proportion Tests',
     'e_studentt.py': 'T Probability',
     'f_allttests.py': 'All T Tests', 
-    'g_sunnorth.py': 'Grid to Sun',
+    'g_chisquare.py': 'Chi-Square Tests',
     'h_celgrid.py': 'Celestial to Grid',
     'i_grid_cel.py': 'Grid to Celestial',
     'j_jadocs.py': 'JADOCS',
