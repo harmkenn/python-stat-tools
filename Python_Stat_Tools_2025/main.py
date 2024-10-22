@@ -14,7 +14,7 @@ st.sidebar.download_button(label="Download Default Excel File", data=open("Pytho
 sub_app_names = {
     'a_quant.py': 'Quantitative Stat Data',
     'b_discrete.py': 'Discrete Probabilities',
-    'c_polar.py': 'Polar',
+    'c_normal.py': 'Normal Probabilities',
     'd_afatds.py': 'AFATDS',
     'e_physics.py': 'Physics',
     'f_sungrid.py': 'Sun to Grid',
