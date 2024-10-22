@@ -22,9 +22,7 @@ sub_app_names = {
     'f_allttests.py': 'All T Tests', 
     'g_chisquare.py': 'Chi-Square Tests',
     'h_linearregression.py': 'Linear Regression',
-    'i_grid_cel.py': 'Grid to Celestial',
-    'j_jadocs.py': 'JADOCS',
-    'k_rockets.py': 'Rockets'
+    'i_anova.py': 'ANOVA Tests'
 }
 
 # Get a list of .py files from the SubApps folder
