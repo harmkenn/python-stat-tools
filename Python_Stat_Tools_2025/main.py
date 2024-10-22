@@ -8,13 +8,12 @@ st.set_page_config(layout="wide", page_title=f"Python Stat Tools 2025")
 st.session_state.xlsx = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 if st.session_state.xlsx is None: st.session_state.xlsx = r"Python_Stat_Tools_2025/Default.xlsx"
 #st.session_state.xlsx = st.sidebar.text_input("Enter the path to your .xlsx file:",r"PythonStatsData.xlsx")
-
 st.sidebar.download_button(label="Download Default Excel File", data=open("Python_Stat_Tools_2025/PythonStatsData.xlsx", "rb").read(), file_name="PythonStatsData.xlsx")
 
 # Dictionary that maps .py filenames to user-friendly names
 sub_app_names = {
     'a_quant.py': 'Quantitative Stat Data',
-    'b_points.py': 'Point to Point',
+    'b_discrete.py': 'Discrete Probabilities',
     'c_polar.py': 'Polar',
     'd_afatds.py': 'AFATDS',
     'e_physics.py': 'Physics',
