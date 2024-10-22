@@ -21,7 +21,7 @@ sub_app_names = {
     'e_studentt.py': 'T Probability',
     'f_allttests.py': 'All T Tests', 
     'g_chisquare.py': 'Chi-Square Tests',
-    'h_celgrid.py': 'Celestial to Grid',
+    'h_linearregression.py': 'Linear Regression',
     'i_grid_cel.py': 'Grid to Celestial',
     'j_jadocs.py': 'JADOCS',
     'k_rockets.py': 'Rockets'
