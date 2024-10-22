@@ -19,7 +19,7 @@ sub_app_names = {
     'c_normal.py': 'Normal Probabilities',
     'd_proportions.py': 'Proportion Tests',
     'e_studentt.py': 'T Probability',
-    'f_allttests.py': 'All ',
+    'f_allttests.py': 'All T Tests', 
     'g_sunnorth.py': 'Grid to Sun',
     'h_celgrid.py': 'Celestial to Grid',
     'i_grid_cel.py': 'Grid to Celestial',
