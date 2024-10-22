@@ -4,6 +4,8 @@ import os
 
 # Set the page layout to wide
 st.set_page_config(layout="wide", page_title=f"Python Stat Tools 2025")
+st.sidebar.title("Python Stat Tools v2025.1")
+st.sidebar.subheader("by Ken Harmon")
 
 st.session_state.xlsx = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
 if st.session_state.xlsx is None: st.session_state.xlsx = r"Python_Stat_Tools_2025/Default.xlsx"
@@ -15,7 +17,7 @@ sub_app_names = {
     'a_quant.py': 'Quantitative Stat Data',
     'b_discrete.py': 'Discrete Probabilities',
     'c_normal.py': 'Normal Probabilities',
-    'd_afatds.py': 'AFATDS',
+    'd_proportions.py': 'Proportion Tests',
     'e_physics.py': 'Physics',
     'f_sungrid.py': 'Sun to Grid',
     'g_sunnorth.py': 'Grid to Sun',
@@ -28,8 +30,7 @@ sub_app_names = {
 # Get a list of .py files from the SubApps folder
 sub_apps_folder = os.path.join(os.path.dirname(__file__), 'apps')
 sub_apps = [f for f in os.listdir(sub_apps_folder) if f.endswith('.py')]
-st.sidebar.title("Python Stat Tools v2025.1")
-st.sidebar.subheader("by Ken Harmon")
+
 # Create radio buttons in the sidebar using the user-friendly names
 selected_sub_app_name = st.sidebar.radio('', list(sub_app_names.values()))
 
