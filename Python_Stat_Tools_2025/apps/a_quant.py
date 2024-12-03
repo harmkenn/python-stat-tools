@@ -53,7 +53,8 @@ if chart_choice == "Histogram":
     with top[1]:
         x = st.selectbox('X-Axis', options=numeric_columns)
         cv = st.selectbox("Color", options=non_numeric_columns)
-        bins = st.slider("Bin Width", min_value=1,max_value=20, value=7)
+        
+        bins = st.slider("Bins", min_value=1,max_value=20, value=7)
                             
     if cv != None:
         fig = px.histogram(df, x = x, color = cv, marginal = 'rug',nbins=bins, facet_row=cv, template= 'simple_white')
