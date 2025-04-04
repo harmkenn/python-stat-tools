@@ -16,7 +16,7 @@ pandas
 pip
 pingouin
 plotly
-plotly.express
+plotly_express
 pydataset
 pyephem
 pygeodesy
