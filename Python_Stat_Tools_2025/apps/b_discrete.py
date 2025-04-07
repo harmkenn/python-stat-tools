@@ -38,7 +38,7 @@ def probability_distribution(title, x_label, dist_func, param1, param2=None, max
 
 # ---------- UI Choice ----------
 
-out1, out2 = st.columns(1,3)
+out1, out2 = st.columns((1,3))
 
 prob_choice = st.radio("Choose Probability Type", [
     "Discrete Probability", 
