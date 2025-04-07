@@ -38,21 +38,22 @@ def probability_distribution(title, x_label, dist_func, param1, param2=None, max
 
 # ---------- UI Choice ----------
 
-out1, out2 = st.columns((1,3))
+col1, col2 = st.columns((1,3))
 
-prob_choice = st.radio("Choose Probability Type", [
-    "Discrete Probability", 
-    "Binomial Probability", 
-    "Geometric Probability", 
-    "Poisson Probability"
-])
+with col1:
+
+    prob_choice = st.radio("Choose Probability Type", [
+        "Discrete Probability", 
+        "Binomial Probability", 
+        "Geometric Probability", 
+        "Poisson Probability"
+    ])
 
 # ---------- Discrete Probability ----------
 
 if prob_choice == "Discrete Probability":
-    top = st.columns((1, 1, 2))
 
-    with top[0]:
+    with col1:
         sheet_names = pd.read_excel(st.session_state.xlsx, sheet_name=None, nrows=0).keys()
         selected_sheet = st.selectbox("Select sheet:", sheet_names, index=1)
 
@@ -62,7 +63,7 @@ if prob_choice == "Discrete Probability":
         df = st.session_state.get('df', pd.read_excel(st.session_state.xlsx, selected_sheet))
         st.dataframe(df)
 
-    with top[1]:
+    with col2:
         if all(col in df.columns for col in ['X', 'Prob(X)', 'Type']):
             df['Mean'] = df['X'] * df['Prob(X)']
             mean_df = df.groupby('Type')['Mean'].sum().reset_index()
@@ -75,7 +76,6 @@ if prob_choice == "Discrete Probability":
             summary.columns = ['Mean', 'Std Dev']
             st.dataframe(summary)
 
-    with top[2]:
         if all(col in df.columns for col in ['X', 'Prob(X)', 'Type']):
             plot_bar(df, x='X', y='Prob(X)', facet_row='Type')
 
