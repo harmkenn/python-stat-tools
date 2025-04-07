@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import math
+from numpy import sqrt, arange
 import plotly.express as px
 from scipy.stats import binom, geom, poisson
 
@@ -32,7 +31,7 @@ def plot_bar(df, x, y, facet_row=None):
 def show_summary(mean, variance):
     summary = pd.DataFrame({
         "Mean": [mean],
-        "Std Dev": [math.sqrt(variance)]
+        "Std Dev": [sqrt(variance)]
     })
     st.write(summary)
 
@@ -64,7 +63,7 @@ if prob_choice == "Discrete Probability":
 
             df = pd.merge(df, mean_df, on='Type', suffixes=('', '_grouped'))
             df['SD'] = (df['X'] - df['Mean_grouped'])**2 * df['Prob(X)']
-            sd_df = df.groupby('Type')['SD'].sum().apply(np.sqrt)
+            sd_df = df.groupby('Type')['SD'].sum().apply(sqrt)
 
             summary_df = pd.concat([mean_df.set_index('Type'), sd_df], axis=1)
             summary_df.columns = ['Mean', 'Std Dev']
@@ -85,7 +84,7 @@ elif prob_choice == "Binomial Probability":
         bit = int(st.text_input("Tries:", 8))
         _ = st.text_input("Hits:", 0)  # Not used in logic
 
-        x_vals = np.arange(bit + 1)
+        x_vals = arange(bit + 1)
         pdf_vals = binom.pmf(x_vals, bit, bip)
         cdf_vals = binom.cdf(x_vals, bit, bip)
 
@@ -114,7 +113,7 @@ elif prob_choice == "Geometric Probability":
         gih = int(st.text_input("Tries:", 4, key="geo_h"))
 
         max_val = int(gih + 6 / gip)
-        x_vals = np.arange(max_val)
+        x_vals = arange(max_val)
         pdf_vals = geom.pmf(x_vals, gip)
         cdf_vals = geom.cdf(x_vals, gip)
 
@@ -143,7 +142,7 @@ elif prob_choice == "Poisson Probability":
         pah = int(st.text_input("Actual Hits:", 4, key="pois_ah"))
 
         max_val = int(pah + 2 * peh)
-        x_vals = np.arange(max_val)
+        x_vals = arange(max_val)
         pdf_vals = poisson.pmf(x_vals, peh)
         cdf_vals = poisson.cdf(x_vals, peh)
 
