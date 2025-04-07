@@ -82,23 +82,26 @@ if prob_choice == "Discrete Probability":
 # ---------- Binomial Probability ----------
 
 elif prob_choice == "Binomial Probability":
-    prob = float(st.text_input("Hit Probability:", 0.2))
-    trials = int(st.text_input("Tries:", 8))
-    _ = st.text_input("Hits (not used):", 0)
-    probability_distribution("Binomial Probability", "Hits", binom, trials, prob, trials + 1)
+    with col1:
+        prob = float(st.text_input("Hit Probability:", 0.2))
+        trials = int(st.text_input("Tries:", 8))
+        _ = st.text_input("Hits (not used):", 0)
+        probability_distribution("Binomial Probability", "Hits", binom, trials, prob, trials + 1)
 
 # ---------- Geometric Probability ----------
 
 elif prob_choice == "Geometric Probability":
-    prob = float(st.text_input("Hit Probability:", 0.2, key="geo_p"))
-    tries = int(st.text_input("Tries:", 4, key="geo_h"))
-    max_val = int(tries + 6 / prob)
-    probability_distribution("Geometric Probability", "Tries", geom, prob, max_x=max_val)
+    with col1:
+        prob = float(st.text_input("Hit Probability:", 0.2, key="geo_p"))
+        tries = int(st.text_input("Tries:", 4, key="geo_h"))
+        max_val = int(tries + 6 / prob)
+        probability_distribution("Geometric Probability", "Tries", geom, prob, max_x=max_val)
 
 # ---------- Poisson Probability ----------
 
 elif prob_choice == "Poisson Probability":
-    lam = float(st.text_input("Expected Hits (λ):", 2, key="pois_eh"))
-    observed = int(st.text_input("Actual Hits:", 4, key="pois_ah"))
-    max_val = int(observed + 2 * lam)
-    probability_distribution("Poisson Probability", "Hits", poisson, lam, max_x=max_val)
+    with col1:
+        lam = float(st.text_input("Expected Hits (λ):", 2, key="pois_eh"))
+        observed = int(st.text_input("Actual Hits:", 4, key="pois_ah"))
+        max_val = int(observed + 2 * lam)
+        probability_distribution("Poisson Probability", "Hits", poisson, lam, max_x=max_val)
