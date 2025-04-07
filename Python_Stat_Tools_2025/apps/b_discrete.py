@@ -23,22 +23,22 @@ def show_summary(mean, variance):
 
 def probability_distribution(title, x_label, dist_func, param1, param2=None, max_x=20):
     st.subheader(title)
-    col1, col2 = st.columns(2)
-
-    with col1:
+    with out1:
         x_vals = arange(max_x)
         pdf = dist_func.pmf(x_vals, param1) if param2 is None else dist_func.pmf(x_vals, param1, param2)
         cdf = dist_func.cdf(x_vals, param1) if param2 is None else dist_func.cdf(x_vals, param1, param2)
 
+    with out2:
         df = pd.DataFrame({x_label: x_vals, "PDF": pdf, "CDF": cdf})
         plot_bar(df, x=x_label, y='PDF')
 
-    with col2:
         st.write(df)
         mean, var = dist_func.stats(param1) if param2 is None else dist_func.stats(param1, param2)
         show_summary(mean, var)
 
 # ---------- UI Choice ----------
+
+out1, out2 = st.columns(1,3)
 
 prob_choice = st.radio("Choose Probability Type", [
     "Discrete Probability", 
