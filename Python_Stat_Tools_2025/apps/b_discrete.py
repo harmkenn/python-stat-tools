@@ -1,88 +1,162 @@
 import streamlit as st
-import plotly_express as px
 import pandas as pd
+import numpy as np
+import math
+import plotly.express as px
 from scipy.stats import binom, geom, poisson
-from numpy import r_, sum, sqrt
 
-def display_data(file_path, selected_sheet):
+# Sidebar selection
+prob_choice = st.radio("Choose Probability Type", [
+    "Discrete Probability", 
+    "Binomial Probability", 
+    "Geometric Probability", 
+    "Poisson Probability"
+])
+
+# ---------- Helper Functions ----------
+
+def display_discrete_data(file_path, sheet):
     try:
-        df = pd.read_excel(file_path, sheet_name=selected_sheet)
+        df = pd.read_excel(file_path, sheet_name=sheet)
+        return df
     except FileNotFoundError:
         st.error("File not found. Please check the path and try again.")
     except (KeyError, ValueError):
-        st.error(f"Sheet '{selected_sheet}' not found in the file.")
-    return df
+        st.error(f"Sheet '{sheet}' not found in the file.")
+    return pd.DataFrame()
 
-def calculate_discrete_probability(df):
-    df['Mean'] = df['X'] * df['Prob(X)']
-    m = df.groupby(['Type'])['Mean'].sum()
-    df = pd.merge(df, m, on='Type', how='inner')
-    df['SD'] = (df['X'] - df['Mean_y']) ** 2 * df['Prob(X)']
-    n = df.groupby(['Type'])['SD'].sum() ** (1 / 2)
-    mn = pd.concat([m, n], axis=1)
-    return mn
+def plot_bar(df, x, y, facet_row=None):
+    fig = px.bar(df, x=x, y=y, facet_row=facet_row, template='simple_white')
+    st.plotly_chart(fig, use_container_width=True)
 
-def calculate_binomial_probability(hit_prob, tries, hits):
-    biah = r_[0:tries + 1]
-    cdf = binom.cdf(biah, tries, hit_prob)
-    pmf = binom.pmf(biah, tries, hit_prob)
-    bdf = pd.concat([biah, pmf, cdf], axis=1)
-    bdf.columns = ["Hits", "PDF", "CDF"]
-    return bdf
+def show_summary(mean, variance):
+    summary = pd.DataFrame({
+        "Mean": [mean],
+        "Std Dev": [math.sqrt(variance)]
+    })
+    st.write(summary)
 
-def calculate_geometric_probability(hit_prob, tries):
-    giah = r_[0:tries + 6 / hit_prob]
-    cdf = geom.cdf(giah, hit_prob)
-    pmf = geom.pmf(giah, hit_prob)
-    gdf = pd.concat([giah, pmf, cdf], axis=1)
-    gdf.columns = ["Tries", "PDF", "CDF"]
-    return gdf
+# ---------- Discrete Probability ----------
 
-def calculate_poisson_probability(expected_hits, actual_hits):
-    paah = r_[0:actual_hits + expected_hits * 2]
-    cdf = poisson.cdf(paah, expected_hits)
-    pmf = poisson.pmf(paah, expected_hits)
-    pdf = pd.concat([paah, pmf, cdf], axis=1)
-    pdf.columns = ["Hits", "PDF", "CDF"]
-    return pdf
+if prob_choice == "Discrete Probability":
+    top = st.columns((1, 1, 2))
 
-def main():
-    prob_choice = st.radio("", ["Discrete Probability", "Binomial Probability", "Geometric Probability", "Poisson Probability"])
+    with top[0]:
+        sheet_names = pd.read_excel(st.session_state.xlsx, sheet_name=None, nrows=0).keys()
+        st.session_state.sheet = st.selectbox("Select sheet:", sheet_names, index=1)
 
-    if prob_choice == "Discrete Probability":
-        df = display_data(st.session_state.xlsx, st.session_state.sheet)
-        mn = calculate_discrete_probability(df)
-        st.dataframe(mn)
-        fig = px.bar(df, x='X', y='Prob(X)', facet_row='Type', template='simple_white')
-        st.plotly_chart(fig, use_container_width=True)
+        if st.button("Refresh Data"):
+            st.session_state.df = display_discrete_data(st.session_state.xlsx, st.session_state.sheet)
 
-    elif prob_choice == "Binomial Probability":
-        hit_prob = float(st.text_input("Hit Probability:", 0.2))
-        tries = int(st.text_input("Tries:", 8))
-        hits = int(st.text_input("Hits:", 0))
-        bdf = calculate_binomial_probability(hit_prob, tries, hits)
-        st.write(bdf)
-        data = pd.DataFrame({"Mean": binom.stats(tries, hit_prob)[0], "Std Dev": sqrt(binom.stats(tries, hit_prob)[1])}, index=[0])
-        st.write(data)
-        fig = px.bar(bdf, x='Hits', y='PDF', template='simple_white')
-        st.plotly_chart(fig, use_container_width=True)
+        df = pd.read_excel(st.session_state.xlsx, st.session_state.sheet)
+        st.dataframe(df)
 
-    elif prob_choice == "Geometric Probability":
-        hit_prob = float(st.text_input("Hit Probability:", 0.2, key="1"))
-        tries = int(st.text_input("Tries:"))
-        gdf = calculate_geometric_probability(hit_prob, tries)
-        st.write(gdf)
-        data = pd.DataFrame({"Mean": geom.stats(hit_prob)[0], "Std Dev": sqrt(geom.stats(hit_prob)[1])}, index=[0])
-        st.write(data)    
-        fig = px.bar(gdf, x='Tries', y='PDF', template='simple_white')
-        st.plotly_chart(fig, use_container_width=True)
+        try:
+            numeric_columns = df.select_dtypes(include=['float', 'int']).columns.tolist()
+            non_numeric_columns = df.select_dtypes(include='object').columns.tolist()
+        except Exception as e:
+            st.write("Please upload a valid file.")
 
-    elif prob_choice == "Poisson Probability":
-        expected_hits = float(st.text_input("Expected Hits:", 0.2))            
-        actual_hits = int(st.text_input("Actual Hits:", 0))            
-        pdf = calculate_poisson_probability(expected_hits, actual_hits)
-        st.write(pdf)
-        data = pd.DataFrame({"Mean": poisson.stats(expected_hits)[0], "Std Dev": sqrt(poisson.stats(expected_hits)[1])}, index=[0])
-        st.write(data)    
-        fig = px.bar(pdf, x='Hits', y='PDF', template='simple_white')
-        st.plotly_chart(fig, use_container_width=True)      
+    with top[1]:
+        if 'X' in df.columns and 'Prob(X)' in df.columns and 'Type' in df.columns:
+            df['Mean'] = df['X'] * df['Prob(X)']
+            mean_df = df.groupby('Type')['Mean'].sum().reset_index()
+
+            df = pd.merge(df, mean_df, on='Type', suffixes=('', '_grouped'))
+            df['SD'] = (df['X'] - df['Mean_grouped'])**2 * df['Prob(X)']
+            sd_df = df.groupby('Type')['SD'].sum().apply(np.sqrt)
+
+            summary_df = pd.concat([mean_df.set_index('Type'), sd_df], axis=1)
+            summary_df.columns = ['Mean', 'Std Dev']
+            st.dataframe(summary_df)
+
+    with top[2]:
+        if 'X' in df.columns and 'Prob(X)' in df.columns and 'Type' in df.columns:
+            plot_bar(df, x='X', y='Prob(X)', facet_row='Type')
+
+# ---------- Binomial Probability ----------
+
+elif prob_choice == "Binomial Probability":
+    top = st.columns(2)
+
+    with top[0]:
+        st.subheader("Binomial Probability")
+        bip = float(st.text_input("Hit Probability:", 0.2))
+        bit = int(st.text_input("Tries:", 8))
+        _ = st.text_input("Hits:", 0)  # Not used in logic
+
+        x_vals = np.arange(bit + 1)
+        pdf_vals = binom.pmf(x_vals, bit, bip)
+        cdf_vals = binom.cdf(x_vals, bit, bip)
+
+        df = pd.DataFrame({
+            "Hits": x_vals,
+            "PDF": pdf_vals,
+            "CDF": cdf_vals
+        })
+
+    with top[1]:
+        st.write(df)
+        mean, var = binom.stats(bit, bip)
+        show_summary(mean, var)
+
+    with top[0]:
+        plot_bar(df, x='Hits', y='PDF')
+
+# ---------- Geometric Probability ----------
+
+elif prob_choice == "Geometric Probability":
+    cols = st.columns(2)
+
+    with cols[0]:
+        st.subheader("Geometric Probability")
+        gip = float(st.text_input("Hit Probability:", 0.2, key="geo_p"))
+        gih = int(st.text_input("Tries:", 4, key="geo_h"))
+
+        max_val = int(gih + 6 / gip)
+        x_vals = np.arange(max_val)
+        pdf_vals = geom.pmf(x_vals, gip)
+        cdf_vals = geom.cdf(x_vals, gip)
+
+        df = pd.DataFrame({
+            "Tries": x_vals,
+            "PDF": pdf_vals,
+            "CDF": cdf_vals
+        })
+
+    with cols[1]:
+        st.write(df)
+        mean, var = geom.stats(gip)
+        show_summary(mean, var)
+
+    with cols[0]:
+        plot_bar(df, x='Tries', y='PDF')
+
+# ---------- Poisson Probability ----------
+
+elif prob_choice == "Poisson Probability":
+    cols = st.columns(2)
+
+    with cols[0]:
+        st.subheader("Poisson Probability")
+        peh = float(st.text_input("Expected Hits:", 2, key="pois_eh"))
+        pah = int(st.text_input("Actual Hits:", 4, key="pois_ah"))
+
+        max_val = int(pah + 2 * peh)
+        x_vals = np.arange(max_val)
+        pdf_vals = poisson.pmf(x_vals, peh)
+        cdf_vals = poisson.cdf(x_vals, peh)
+
+        df = pd.DataFrame({
+            "Hits": x_vals,
+            "PDF": pdf_vals,
+            "CDF": cdf_vals
+        })
+
+    with cols[1]:
+        st.write(df)
+        mean, var = poisson.stats(peh)
+        show_summary(mean, var)
+
+    with cols[0]:
+        plot_bar(df, x='Hits', y='PDF')
