@@ -22,13 +22,14 @@ def show_summary(mean, variance):
     st.write(pd.DataFrame({"Mean": [mean], "Std Dev": [sqrt(variance)]}))
 
 def probability_distribution(title, x_label, dist_func, param1, param2=None, max_x=20):
-    st.subheader(title)
+    
     with col1:
         x_vals = arange(max_x)
         pdf = dist_func.pmf(x_vals, param1) if param2 is None else dist_func.pmf(x_vals, param1, param2)
         cdf = dist_func.cdf(x_vals, param1) if param2 is None else dist_func.cdf(x_vals, param1, param2)
 
     with col2:
+        st.subheader(title)
         df = pd.DataFrame({x_label: x_vals, "PDF": pdf, "CDF": cdf})
         plot_bar(df, x=x_label, y='PDF')
 
