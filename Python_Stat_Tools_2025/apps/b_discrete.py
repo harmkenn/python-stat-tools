@@ -2,6 +2,7 @@ import streamlit as st
 import plotly_express as px
 import pandas as pd
 from scipy.stats import binom, geom, poisson
+from numpy import r_, sum, sqrt
 
 def display_data(file_path, selected_sheet):
     try:
@@ -22,7 +23,7 @@ def calculate_discrete_probability(df):
     return mn
 
 def calculate_binomial_probability(hit_prob, tries, hits):
-    biah = np.r_[0:tries + 1]
+    biah = r_[0:tries + 1]
     cdf = binom.cdf(biah, tries, hit_prob)
     pmf = binom.pmf(biah, tries, hit_prob)
     bdf = pd.concat([biah, pmf, cdf], axis=1)
@@ -30,7 +31,7 @@ def calculate_binomial_probability(hit_prob, tries, hits):
     return bdf
 
 def calculate_geometric_probability(hit_prob, tries):
-    giah = np.r_[0:tries + 6 / hit_prob]
+    giah = r_[0:tries + 6 / hit_prob]
     cdf = geom.cdf(giah, hit_prob)
     pmf = geom.pmf(giah, hit_prob)
     gdf = pd.concat([giah, pmf, cdf], axis=1)
@@ -38,7 +39,7 @@ def calculate_geometric_probability(hit_prob, tries):
     return gdf
 
 def calculate_poisson_probability(expected_hits, actual_hits):
-    paah = np.r_[0:actual_hits + expected_hits * 2]
+    paah = r_[0:actual_hits + expected_hits * 2]
     cdf = poisson.cdf(paah, expected_hits)
     pmf = poisson.pmf(paah, expected_hits)
     pdf = pd.concat([paah, pmf, cdf], axis=1)
@@ -61,11 +62,27 @@ def main():
         hits = int(st.text_input("Hits:", 0))
         bdf = calculate_binomial_probability(hit_prob, tries, hits)
         st.write(bdf)
-        data = pd.DataFrame({"Mean": binom.stats(tries, hit_prob)[0], "Std Dev": math.sqrt(binom.stats(tries, hit_prob)[1])}, index=[0])
+        data = pd.DataFrame({"Mean": binom.stats(tries, hit_prob)[0], "Std Dev": sqrt(binom.stats(tries, hit_prob)[1])}, index=[0])
         st.write(data)
         fig = px.bar(bdf, x='Hits', y='PDF', template='simple_white')
         st.plotly_chart(fig, use_container_width=True)
 
     elif prob_choice == "Geometric Probability":
         hit_prob = float(st.text_input("Hit Probability:", 0.2, key="1"))
-        tries = int(st.text_input("Tries
+        tries = int(st.text_input("Tries:"))
+        gdf = calculate_geometric_probability(hit_prob, tries)
+        st.write(gdf)
+        data = pd.DataFrame({"Mean": geom.stats(hit_prob)[0], "Std Dev": sqrt(geom.stats(hit_prob)[1])}, index=[0])
+        st.write(data)    
+        fig = px.bar(gdf, x='Tries', y='PDF', template='simple_white')
+        st.plotly_chart(fig, use_container_width=True)
+
+    elif prob_choice == "Poisson Probability":
+        expected_hits = float(st.text_input("Expected Hits:", 0.2))            
+        actual_hits = int(st.text_input("Actual Hits:", 0))            
+        pdf = calculate_poisson_probability(expected_hits, actual_hits)
+        st.write(pdf)
+        data = pd.DataFrame({"Mean": poisson.stats(expected_hits)[0], "Std Dev": sqrt(poisson.stats(expected_hits)[1])}, index=[0])
+        st.write(data)    
+        fig = px.bar(pdf, x='Hits', y='PDF', template='simple_white')
+        st.plotly_chart(fig, use_container_width=True)      
