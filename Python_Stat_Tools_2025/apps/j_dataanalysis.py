@@ -15,16 +15,8 @@ if uploaded_file:
     quantitative = df.select_dtypes(include=['number']).columns.tolist()
     categorical = df.select_dtypes(exclude=['number']).columns.tolist()
 
-    ordinal = []
-    for col in categorical:
-        if df[col].nunique() <= 10:
-            ordinal.append(col)
-
-    categorical = [col for col in categorical if col not in ordinal]
-
     st.sidebar.header("Column Type Overview")
     st.sidebar.write("**Quantitative:**", quantitative)
-    st.sidebar.write("**Ordinal:**", ordinal)
     st.sidebar.write("**Categorical:**", categorical)
 
     # User selection
@@ -37,7 +29,7 @@ if uploaded_file:
     filter_col = st.sidebar.selectbox("Filter by (Optional)", [None] + df.columns.tolist())
     if filter_col:
         filter_vals = df[filter_col].dropna().unique().tolist()
-        selected_vals = st.sidebar.multiselect("Select values to include", filter_vals, default=filter_vals)
+        selected_vals = st.sidebar.multiselect("Select values to include from " + filter_col, filter_vals, default=filter_vals)
         df = df[df[filter_col].isin(selected_vals)]
 
     # Visualization
@@ -45,11 +37,11 @@ if uploaded_file:
     try:
         if x_col in quantitative and y_col in quantitative:
             fig = px.scatter(df, x=x_col, y=y_col, color=color_col)
-        elif x_col in categorical + ordinal and y_col in quantitative:
+        elif x_col in categorical and y_col in quantitative:
             fig = px.box(df, x=x_col, y=y_col, color=color_col)
-        elif x_col in quantitative and y_col in categorical + ordinal:
+        elif x_col in quantitative and y_col in categorical:
             fig = px.box(df, x=y_col, y=x_col, color=color_col, orientation='h')
-        elif x_col in categorical + ordinal and y_col in categorical + ordinal:
+        elif x_col in categorical and y_col in categorical:
             cross_tab = pd.crosstab(df[x_col], df[y_col])
             fig = go.Figure(data=[go.Heatmap(z=cross_tab.values, x=cross_tab.columns, y=cross_tab.index)])
         else:
