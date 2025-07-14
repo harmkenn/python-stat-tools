@@ -4,7 +4,7 @@ import os
 
 # Set the page layout to wide
 st.set_page_config(layout="wide", page_title=f"Python Stat Tools 2025")
-st.sidebar.title("Python Stat Tools v2025.2")
+st.sidebar.title("Python Stat Tools v2025.3")
 st.sidebar.subheader("by Ken Harmon")
 
 st.session_state.xlsx = st.sidebar.file_uploader("Choose an Excel file", type="xlsx")
