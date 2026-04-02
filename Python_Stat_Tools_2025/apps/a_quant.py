@@ -55,7 +55,7 @@ if df is not None:
 
         fig = px.histogram(df, x=x, color=cv, marginal='rug', nbins=bins, facet_row=cv, template='simple_white') if cv else px.histogram(df, x=x, marginal='rug', nbins=bins)
         with top[1]:
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     elif chart_choice == "Boxplot & Dotplot":
         with top[1]:
@@ -64,7 +64,7 @@ if df is not None:
 
         fig = px.box(df, x=x, y=cv, points="all", color=cv) if cv else px.box(df, x=x, points="all")
         with top[1]:
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     elif chart_choice == "QQplot":
         with top[1]:
@@ -79,7 +79,7 @@ if df is not None:
         ax.set_ylabel('Sample Quantiles')
         ax.set_title('QQ-Plot with Confidence Interval Bands')
         with top[1]:
-            st.pyplot(fig, use_container_width=True)
+            st.pyplot(fig, width="stretch")
 
     elif chart_choice == "Scatterplot":
         with top[1]:
@@ -89,7 +89,7 @@ if df is not None:
 
         fig = px.scatter(df, x=x, y=y, color=cv, trendline='ols') if cv else px.scatter(df, x=x, y=y, trendline='ols')
         with top[1]:
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # Display data tables
     with top[0]:
