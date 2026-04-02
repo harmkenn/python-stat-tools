@@ -2,6 +2,7 @@
 streamlit
 pandas
 numpy
+openpyxl
 plotly
 plotly_express
 statsmodels
