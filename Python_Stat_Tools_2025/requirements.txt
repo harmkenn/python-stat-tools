@@ -3,6 +3,7 @@ streamlit
 pandas
 numpy
 plotly
+plotly_express
 statsmodels
 matplotlib
 pingouin
