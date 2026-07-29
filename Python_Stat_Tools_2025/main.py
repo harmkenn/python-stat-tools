@@ -16,6 +16,7 @@ st.sidebar.download_button(label="Download Default Excel File", data=open("Pytho
 sub_app_names = {
     'a_quant.py': 'Quantitative Stat Data',
     'b_discrete.py': 'Discrete Probabilities',
+    'CompareNormal.py': 'Compare Normals',
     'c_normal.py': 'Normal Probabilities',
     'd_proportions.py': 'Proportion Tests',
     'e_studentt.py': 'T Probability',
