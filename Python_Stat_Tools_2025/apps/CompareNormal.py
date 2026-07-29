@@ -9,15 +9,15 @@ st.set_page_config(page_title="Normal Distribution Comparator", layout="wide")
 st.title("Normal Distribution Comparator")
 
 # --- Sidebar Inputs ---
-st.sidebar.header("Distribution Parameters")
+st.header("Distribution Parameters")
 
-st.sidebar.subheader("Distribution A")
-mean_a = st.sidebar.number_input("Mean A", value=0.0)
-std_a = st.sidebar.number_input("Std Dev A", value=1.0, min_value=0.0001)
+st.subheader("Distribution A")
+mean_a = st.number_input("Mean A", value=0.0)
+std_a = st.number_input("Std Dev A", value=1.0, min_value=0.0001)
 
-st.sidebar.subheader("Distribution B")
-mean_b = st.sidebar.number_input("Mean B", value=1.0)
-std_b = st.sidebar.number_input("Std Dev B", value=1.0, min_value=0.0001)
+st.subheader("Distribution B")
+mean_b = st.number_input("Mean B", value=1.0)
+std_b = st.number_input("Std Dev B", value=1.0, min_value=0.0001)
 
 # --- Generate X Range ---
 x = np.linspace(
